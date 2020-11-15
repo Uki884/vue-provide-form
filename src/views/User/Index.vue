@@ -7,8 +7,9 @@
 
 <script lang="ts">
 import { defineComponent, reactive } from "vue";
-import FormContent from "@/components/organisms/UserForm/FormContent.vue"; // @ is an alias to /src
-import { provideStore, useUserForm } from "@/views/User/userFormStore.ts";
+import FormContent from "@/components/organisms/UserForm/FormContent.vue";
+import { provideComponentStore, useStore } from "@/compositions/componentStore";
+import { UserFormKey } from "@/compositions/storeKeys";
 
 export default defineComponent({
   name: "Home",
@@ -16,30 +17,29 @@ export default defineComponent({
     FormContent
   },
   setup(props, context) {
-    const input = reactive({
+    const state = reactive({
       name: "",
       nameKana: "",
       email: "",
       family: {
         child: {
           name: "",
-          age: {
-            type: 11,
-            aa: 22
-          }
+          age: 12
         }
       },
       job: {
+        unemployed: true,
         type: "テスト",
-        interval: {
-          year: 2020,
-          month: 1
+        start: {
+          year: null,
+          month: null,
+          day: null
         }
       }
     });
 
-    const { inputs } = useUserForm(input);
-    provideStore(input);
+    const { inputs } = useStore(state);
+    provideComponentStore(UserFormKey, state);
     return {
       inputs
     };

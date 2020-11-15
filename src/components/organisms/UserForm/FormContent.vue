@@ -1,54 +1,73 @@
 <template>
-  <div class="form">
-    <button @click="useSetValue('name', 'aaaaaa')">test</button>
-    <button @click="directSet">直接変更は禁止</button>
-    <div class="form-item">
-      <InputText :inputItem="inputItems.name" />
-    </div>
-    <div class="form-item">
-      <InputText :inputItem="inputItems.nameKana" />
-    </div>
-    <div class="form-item">
-      <InputText :inputItem="inputItems.family_child_age_aa" />
-    </div>
-    <div class="form-item">
+  <base-form>
+    <form-item>
+      <button @click="directSetValue">stateの直接変更はできない</button>
+    </form-item>
+    <user-info />
+    <form-item label="子供の名前">
       <InputText :inputItem="inputItems.family_child_name" />
-    </div>
-  </div>
+    </form-item>
+    <form-item label="子供の年齢">
+      <InputText :inputItem="inputItems.family_child_age" />
+    </form-item>
+    <form-item label="仕事開始年">
+      <InputText :inputItem="inputItems.job_start_year" />
+    </form-item>
+    <form-item label="仕事開始月">
+      <InputText :inputItem="inputItems.job_start_month" />
+    </form-item>
+    <form-item label="技能者">
+      <input
+        :value="inputItems.job_unemployed.value"
+        @input="
+          inputItems.job_unemployed.setValue(
+            inputItems.job_unemployed.keyName,
+            $event.target.checked
+          )
+        "
+        type="checkbox"
+      />
+    </form-item>
+  </base-form>
 </template>
 
 <script lang="ts">
 import { defineComponent, computed } from "vue";
-import { useUserStore } from "@/views/User/userFormStore";
+import { useComponentStore } from "@/compositions/componentStore";
 import InputText from "@/components/molecules/InputText.vue";
+import BaseForm from "@/components/atoms/BaseForm.vue";
+import FormItem from "@/components/atoms/FormItem.vue";
+import UserInfo from "@/components/organisms/UserForm/UserInfo.vue";
+import { UserFormKey } from "@/compositions/storeKeys";
 
 export default defineComponent({
   name: "FormContent",
   components: {
-    InputText
+    BaseForm,
+    FormItem,
+    InputText,
+    UserInfo
   },
   setup(props, context) {
-    const { inputs, useSetValue, useInput } = useUserStore();
+    const { inputs, useSetValue, useInputs } = useComponentStore(UserFormKey);
 
-    const directSet = () => {
+    const directSetValue = () => {
       inputs.name = "aaaa";
     };
 
-    const inputItems = useInput(inputs);
+    const inputItems = useInputs(inputs);
     console.log(inputItems);
 
     return {
-      InputText,
       inputItems,
       inputs,
       useSetValue,
-      directSet
+      directSetValue
     };
   }
 });
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
 h3 {
   margin: 40px 0 0;
