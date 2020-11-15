@@ -1,9 +1,20 @@
 <template>
-  <button @click="useSetValue('name', 'aaaaaa')">test</button>
-  <button @click="directSet">直接変更は禁止</button>
-  <InputText :inputItem="inputItems.name" :value="inputItems.name.value" />
-  <InputText :inputItem="inputItems.nameKana" />
-  <InputText :inputItem="inputItems.family_child_age_aa" />
+  <div class="form">
+    <button @click="useSetValue('name', 'aaaaaa')">test</button>
+    <button @click="directSet">直接変更は禁止</button>
+    <div class="form-item">
+      <InputText :inputItem="inputItems.name" />
+    </div>
+    <div class="form-item">
+      <InputText :inputItem="inputItems.nameKana" />
+    </div>
+    <div class="form-item">
+      <InputText :inputItem="inputItems.family_child_age_aa" />
+    </div>
+    <div class="form-item">
+      <InputText :inputItem="inputItems.family_child_name" />
+    </div>
+  </div>
 </template>
 
 <script lang="ts">

@@ -40,7 +40,6 @@ export default defineComponent({
 
     const { inputs } = useUserForm(input);
     provideStore(input);
-
     return {
       inputs
     };

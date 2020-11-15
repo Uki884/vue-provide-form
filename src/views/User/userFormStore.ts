@@ -1,20 +1,12 @@
-import {
-  reactive,
-  InjectionKey,
-  inject,
-  computed,
-  ComputedRef,
-  provide,
-  toRefs,
-  readonly
-} from "vue";
+import { InjectionKey, inject, provide, readonly } from "vue";
+
+import { set } from "lodash";
 
 export const Key: InjectionKey<Store> = Symbol("UserForm");
 
 const recursiveObject = (objects: any, name: string) => {
   const items = objects;
   if (typeof items !== "object") return;
-
   const result = {} as any;
   const recursive = (objects: any, name: string): any => {
     if (typeof objects !== "object") {
@@ -36,8 +28,7 @@ export const useUserForm = (state: any): any => {
   const inputs = readonly(state);
 
   const setValue = (key: string, payload: any) => {
-    console.log(key, payload);
-    state[key] = payload;
+    set(state, key, payload);
   };
 
   const useInput = (inputs: any) => {
