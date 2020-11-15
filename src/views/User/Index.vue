@@ -14,13 +14,25 @@ import {
 } from "@/compositions/componentStore";
 import { UserFormKey } from "@/compositions/storeKeys";
 
+interface State {
+  name: string;
+  nameKana: string;
+  email: string;
+  family: { child: { name: string; age: number } };
+  job: {
+    unemployed: boolean;
+    type: string;
+    start: { year: null | string; month: null | string; day: null | string };
+  };
+}
+
 export default defineComponent({
   name: "Home",
   components: {
     FormContent
   },
   setup(props, context) {
-    const state = reactive({
+    const state = reactive<State>({
       name: "",
       nameKana: "",
       email: "",
@@ -41,8 +53,8 @@ export default defineComponent({
       }
     });
 
-    const { inputs } = createComponentStore(state);
-    provideComponentStore(UserFormKey, state);
+    const { inputs } = createComponentStore<State>(state);
+    provideComponentStore<State>(UserFormKey, state);
     return {
       inputs
     };

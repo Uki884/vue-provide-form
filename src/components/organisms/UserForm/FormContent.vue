@@ -35,6 +35,18 @@ import FormItem from "@/components/atoms/FormItem.vue";
 import UserInfo from "@/components/organisms/UserForm/UserInfo.vue";
 import { UserFormKey } from "@/compositions/storeKeys";
 
+interface State {
+  name: string;
+  nameKana: string;
+  email: string;
+  family: { child: { name: string; age: number } };
+  job: {
+    unemployed: boolean;
+    type: string;
+    start: { year: null | string; month: null | string; day: null | string };
+  };
+}
+
 export default defineComponent({
   name: "FormContent",
   components: {
@@ -44,18 +56,16 @@ export default defineComponent({
     UserInfo
   },
   setup(props, context) {
-    const { inputs, useSetValue, useInputs } = useComponentStore(UserFormKey);
+    const { inputs, useSetValue, useInputs, inputItems } = useComponentStore<
+      State
+    >(UserFormKey);
+    console.log(inputItems);
 
     const directSetValue = () => {
       inputs.name = "aaaa";
     };
-
-    const inputItems = useInputs(inputs);
-    console.log(inputItems);
-
     return {
       inputItems,
-      inputs,
       useSetValue,
       directSetValue
     };

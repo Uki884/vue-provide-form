@@ -2,6 +2,13 @@ import { InjectionKey, inject, provide, readonly } from "vue";
 
 import { set } from "lodash";
 
+interface CreateComponentStore<T> {
+  inputs: T;
+  useSetValue: (key: string, payload: any) => void;
+  useInputs: (inputs: T) => any;
+  inputItems: any;
+}
+
 const recursiveObject = (objects: any, name: string) => {
   const items = objects;
   if (typeof items !== "object") return;
@@ -49,27 +56,30 @@ const createInputs = (inputs: any, func: Function) => {
   return { ...result };
 };
 
-export const createComponentStore = (state: any): any => {
-  const inputs = readonly(state);
+export const createComponentStore = <T>(state: T): CreateComponentStore<T> => {
+  const inputs: T = readonly<any>(state);
 
-  const setValue = (key: string, payload: any) => {
+  const setValue = <T>(key: string, payload: T) => {
     set(state, key, payload);
   };
 
-  const useInputs = (inputs: any) => {
-    return createInputs(inputs, setValue);
+  const useInputs = () => {
+    return createInputs(state, setValue);
   };
 
   return {
     inputs,
     useSetValue: setValue,
-    useInputs
+    useInputs,
+    inputItems: createInputs(state, setValue)
   };
 };
 
 export type Store = ReturnType<typeof createComponentStore>;
 
-export const useComponentStore = (key: InjectionKey<Store>) => {
+export const useComponentStore = <T>(
+  key: InjectionKey<Store>
+): CreateComponentStore<T | any> => {
   const store = inject(key) as Store;
   if (!store) {
     throw new Error("store is called without provider.");
@@ -77,6 +87,9 @@ export const useComponentStore = (key: InjectionKey<Store>) => {
   return store;
 };
 
-export const provideComponentStore = (key: InjectionKey<Store>, state: any) => {
-  provide(key, createComponentStore(state));
+export const provideComponentStore = <T>(
+  key: InjectionKey<Store>,
+  state: T
+) => {
+  provide(key, createComponentStore<T | any>(state));
 };
