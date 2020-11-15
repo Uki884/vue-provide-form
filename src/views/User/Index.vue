@@ -8,7 +8,10 @@
 <script lang="ts">
 import { defineComponent, reactive } from "vue";
 import FormContent from "@/components/organisms/UserForm/FormContent.vue";
-import { provideComponentStore, useStore } from "@/compositions/componentStore";
+import {
+  provideComponentStore,
+  createComponentStore
+} from "@/compositions/componentStore";
 import { UserFormKey } from "@/compositions/storeKeys";
 
 export default defineComponent({
@@ -38,7 +41,7 @@ export default defineComponent({
       }
     });
 
-    const { inputs } = useStore(state);
+    const { inputs } = createComponentStore(state);
     provideComponentStore(UserFormKey, state);
     return {
       inputs

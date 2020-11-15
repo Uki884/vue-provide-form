@@ -1,9 +1,5 @@
 <template>
-  <BaseInput
-    :keyName="inputItem.keyName"
-    :value="inputItem.value"
-    @input="inputItem.setValue"
-  />
+  <BaseInput :value="inputItem.value" @update="inputItem.setValue" />
 </template>
 
 <script lang="ts">

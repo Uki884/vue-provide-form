@@ -1,4 +1,4 @@
-import { InjectionKey, inject, provide, readonly, reactive } from "vue";
+import { InjectionKey, inject, provide, readonly } from "vue";
 
 import { set } from "lodash";
 
@@ -22,6 +22,13 @@ const recursiveObject = (objects: any, name: string) => {
   return recursive(items, name);
 };
 
+const createSetValue = (key: string, func: Function) => {
+  const setValue = (payload: any) => {
+    return func(key, payload);
+  };
+  return setValue;
+};
+
 const createInputs = (inputs: any, func: Function) => {
   const result = {} as any;
   for (const input of Object.keys(inputs)) {
@@ -29,12 +36,12 @@ const createInputs = (inputs: any, func: Function) => {
       const item = {} as any;
       item.keyName = input;
       item.value = inputs[input];
-      item.setValue = func;
+      item.setValue = createSetValue(input, func);
       result[input] = item;
     } else {
       const items = recursiveObject(inputs[input], input);
       for (const item of Object.keys(items)) {
-        items[item].setValue = func;
+        items[item].setValue = createSetValue(items[item].keyName, func);
         result[item] = items[item];
       }
     }
@@ -42,7 +49,7 @@ const createInputs = (inputs: any, func: Function) => {
   return { ...result };
 };
 
-export const useStore = (state: any): any => {
+export const createComponentStore = (state: any): any => {
   const inputs = readonly(state);
 
   const setValue = (key: string, payload: any) => {
@@ -60,7 +67,7 @@ export const useStore = (state: any): any => {
   };
 };
 
-export type Store = ReturnType<typeof useStore>;
+export type Store = ReturnType<typeof createComponentStore>;
 
 export const useComponentStore = (key: InjectionKey<Store>) => {
   const store = inject(key) as Store;
@@ -71,5 +78,5 @@ export const useComponentStore = (key: InjectionKey<Store>) => {
 };
 
 export const provideComponentStore = (key: InjectionKey<Store>, state: any) => {
-  provide(key, useStore(state));
+  provide(key, createComponentStore(state));
 };

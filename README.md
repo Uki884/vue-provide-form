@@ -112,7 +112,7 @@ const inputItems = {
 
 値の更新はオブジェクトに定義されているsetValueメソッドを使って行う。
 
-setValueメソッドの引数にkeyName, 変更したいvalueを渡すことでコンポーネントストア全体の指定のキーのstateが変更できる
+setValueメソッドの引数に変更したいvalueを渡すことでコンポーネントストア全体の指定のキーのstateが変更できる
 ここはlodashのsetメソッドを使ってる
 
 ```js
@@ -123,7 +123,7 @@ setValueメソッドの引数にkeyName, 変更したいvalueを渡すことで�
     // checkboxの場合
       <input
         :value="inputItems.job_unemployed.value"
-        @input="inputItems.job_unemployed.setValue(inputItems.job_unemployed.keyName, $event.target.checked)"
+        @input="inputItems.job_unemployed.setValue($event.target.checked)"
         type="checkbox"
       />
 ```

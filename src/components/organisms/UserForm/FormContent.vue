@@ -19,12 +19,7 @@
     <form-item label="技能者">
       <input
         :value="inputItems.job_unemployed.value"
-        @input="
-          inputItems.job_unemployed.setValue(
-            inputItems.job_unemployed.keyName,
-            $event.target.checked
-          )
-        "
+        @input="inputItems.job_unemployed.setValue($event.target.checked)"
         type="checkbox"
       />
     </form-item>

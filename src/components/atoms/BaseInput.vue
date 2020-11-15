@@ -1,5 +1,5 @@
 <template>
-  <input :value="value" @input="$emit('input', keyName, $event.target.value)" />
+  <input :value="value" @input="$emit('update', $event.target.value)" />
 </template>
 
 <script lang="ts">
@@ -7,8 +7,7 @@ import { defineComponent, computed } from "vue";
 
 export default defineComponent({
   props: {
-    value: [String, Number],
-    keyName: String
+    value: [String, Number]
   }
 });
 </script>
