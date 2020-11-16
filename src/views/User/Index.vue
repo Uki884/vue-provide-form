@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    {{ inputs }}
+    {{ state }}
     <FormContent />
   </div>
 </template>
@@ -53,10 +53,9 @@ export default defineComponent({
       }
     });
 
-    const { inputs } = createComponentStore<State>(state);
     provideComponentStore<State>(UserFormKey, state);
     return {
-      inputs
+      state
     };
   }
 });

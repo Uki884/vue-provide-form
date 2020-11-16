@@ -42,7 +42,7 @@ export const UserFormKey: InjectionKey<Store> = Symbol("UserForm");
 
 ```js
 
-import { provideComponentStore, useStore } from '@/compositions/componentStore'
+import { provideComponentStore } from '@/compositions/componentStore'
 import { UserFormKey } from '@/compositions/storeKeys'
 
   setup(props, context) {
@@ -65,24 +65,22 @@ import { UserFormKey } from '@/compositions/storeKeys'
         }
       }
     });
-    const { inputs } = useStore(state);
     provideComponentStore(UserFormKey, state);
     return {
-      inputs
+      state
     };
   }
 
 ```
 
-3.使いたいコンポーネントでinjectする
+3.使いたいコンポーネントでuseComponentStoreを使用して親コンポーネントのstateを使用できる
 
 ```js
 import { useComponentStore } from '@/compositions/componentStore';
 import { UserFormKey } from '@/compositions/storeKeys'
 
   setup(props, context) {
-    const { inputs, useSetValue, useInputs } = useComponentStore(UserFormKey);
-    const inputItems = useInputs(inputs);
+    const { inputs, useSetValue, inputItems } = useComponentStore(UserFormKey);
     return {
       inputItems,
     };
@@ -90,7 +88,8 @@ import { UserFormKey } from '@/compositions/storeKeys'
 
 ```
 
-ネストされたオブジェクトの場合、useInputsで生成されるobjectは以下のようになる
+ネストされたオブジェクトの場合、useInputsで生成されるobjectは以下のようになる。
+
 
 ```js
     const state = reactive({
@@ -114,6 +113,8 @@ const inputItems = {
 
 setValueメソッドの引数に変更したいvalueを渡すことでコンポーネントストア全体の指定のキーのstateが変更できる
 ここはlodashのsetメソッドを使ってる
+
+※v-modelに対応していないので、今後対応する
 
 ```js
     <form-item label="子供の名前">
