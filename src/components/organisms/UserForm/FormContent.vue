@@ -5,7 +5,7 @@
     </form-item>
     <user-info />
     <form-item label="子供の名前">
-      <InputText :inputItem="inputItems.family_child_name" />
+      <InputText :inputItem="inputItems.family_child_name" scheme="hiragana" />
     </form-item>
     <form-item label="子供の年齢">
       <InputText :inputItem="inputItems.family_child_age" />
@@ -14,12 +14,13 @@
       <InputText :inputItem="inputItems.job_start_year" />
     </form-item>
     <form-item label="仕事開始月">
-      <InputText :inputItem="inputItems.job_start_month" />
+      <InputText :inputItem="inputItems.job_start_month" scheme="required" />
     </form-item>
     <form-item label="技能者">
       <input
         :value="inputItems.job_unemployed.value"
         @input="inputItems.job_unemployed.setValue($event.target.checked)"
+        @change="inputItems.job_unemployed.validate($event.target.checked)"
         type="checkbox"
       />
     </form-item>

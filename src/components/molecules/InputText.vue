@@ -1,5 +1,15 @@
 <template>
-  <BaseInput :value="inputItem.value" @update="inputItem.setValue" />
+  <BaseInput
+    :value="inputItem.value"
+    @update="inputItem.setValue"
+    @input="inputItem.validator.validate(scheme, $event.target.value)"
+  />
+  <div>
+    <p>validationMessage</p>
+    {{ inputItem.validator.validationMessage.value }}
+    <p>isValid</p>
+    {{ inputItem.validator.isValid.value }}
+  </div>
 </template>
 
 <script lang="ts">
@@ -11,7 +21,8 @@ export default defineComponent({
     BaseInput
   },
   props: {
-    inputItem: Object
+    inputItem: Object,
+    scheme: String
   }
 });
 </script>
