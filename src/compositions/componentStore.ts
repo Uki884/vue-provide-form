@@ -39,9 +39,7 @@ const recursiveObject = (objects: any, name: string) => {
       const reName = name.split(".").join("_");
       result[reName] = {
         keyName: name,
-        value: objects,
-        validationMessage: "",
-        isValid: true
+        value: objects
       };
       return result;
     } else if (typeof objects === "object") {
@@ -82,7 +80,6 @@ class Validator {
     if (scheme == "hiragana") {
       this.validationMessage.value = this.format("Hiragana");
     }
-    console.log(this.validationMessage.value);
   }
 
   format(schemeName: string) {
@@ -113,8 +110,6 @@ const createInputs = (inputs: any, func: Function) => {
       const item = {} as any;
       item.keyName = input;
       item.value = inputs[input];
-      item.validationMessage = "";
-      item.isValid = true;
       item.validator = new Validator();
       item.setValue = createSetValue(input, func);
       result[input] = item;
