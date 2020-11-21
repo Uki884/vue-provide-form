@@ -2,6 +2,7 @@
   <div class="home">
     {{ state }}
     <FormContent />
+    <button @click="submit">送信</button>
   </div>
 </template>
 

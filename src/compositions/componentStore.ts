@@ -47,14 +47,20 @@ const createInputs = (inputs: any, func: Function) => {
       const item = {} as any;
       item.keyName = input;
       item.value = inputs[input];
-      item.validator = new Validator();
+      item.initValidator = (name: string, scheme: string) => {
+        const func = new Validator(name, scheme);
+        return func;
+      };
       item.setValue = createSetValue(input, func);
       result[input] = item;
     } else {
       const items = recursiveObject(inputs[input], input);
       for (const item of Object.keys(items)) {
         items[item].setValue = createSetValue(items[item].keyName, func);
-        items[item].validator = new Validator();
+        items[item].initValidator = (name: string, scheme: string) => {
+          const func = new Validator(name, scheme);
+          return func;
+        };
         result[item] = items[item];
       }
     }

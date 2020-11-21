@@ -4,23 +4,63 @@
       <button @click="directSetValue">stateの直接変更はできない</button>
     </form-item>
     <user-info />
+    <form-item label="email">
+      <InputText
+        :inputItem="inputItems.email"
+        :validator="
+          inputItems.email.initValidator('メールアドレス', 'mail|required')
+        "
+      />
+    </form-item>
     <form-item label="子供の名前">
-      <InputText :inputItem="inputItems.family_child_name" scheme="hiragana" />
+      <InputText
+        :inputItem="inputItems.family_child_name"
+        :validator="
+          inputItems.family_child_name.initValidator(
+            '子供の名前',
+            'hiragana|required'
+          )
+        "
+      />
     </form-item>
     <form-item label="子供の年齢">
-      <InputText :inputItem="inputItems.family_child_age" />
+      <InputText
+        :inputItem="inputItems.family_child_age"
+        :validator="
+          inputItems.family_child_age.initValidator(
+            '子供の年齢',
+            'hiragana|required'
+          )
+        "
+      />
     </form-item>
     <form-item label="仕事開始年">
-      <InputText :inputItem="inputItems.job_start_year" />
+      <InputText
+        :inputItem="inputItems.job_start_year"
+        :validator="
+          inputItems.job_start_year.initValidator(
+            '仕事開始年',
+            'number|required'
+          )
+        "
+      />
     </form-item>
     <form-item label="仕事開始月">
-      <InputText :inputItem="inputItems.job_start_month" scheme="required" />
+      <InputText
+        :inputItem="inputItems.job_start_month"
+        :validator="
+          inputItems.job_start_year.initValidator(
+            '仕事開始月',
+            'number|required'
+          )
+        "
+      />
     </form-item>
     <form-item label="技能者">
       <input
         :value="inputItems.job_unemployed.value"
         @input="inputItems.job_unemployed.setValue($event.target.checked)"
-        @change="inputItems.job_unemployed.validate($event.target.checked)"
+        @change="jobUnemployedValidator.validate($event.target.checked)"
         type="checkbox"
       />
     </form-item>
@@ -65,10 +105,16 @@ export default defineComponent({
     const directSetValue = () => {
       inputs.name = "aaaa";
     };
+
+    const jobUnemployedValidator = inputItems.job_start_year.initValidator(
+      "技能者",
+      "required"
+    );
     return {
       inputItems,
       useSetValue,
-      directSetValue
+      directSetValue,
+      jobUnemployedValidator
     };
   }
 });

@@ -1,10 +1,18 @@
 <template>
   <div class="user-info">
     <form-item label="名前">
-      <InputText :inputItem="inputItems.name" />
+      <InputText
+        :inputItem="inputItems.name"
+        :validator="inputItems.name.initValidator('名前', 'hiragana|required')"
+      />
     </form-item>
     <form-item label="名前(かな)">
-      <InputText :inputItem="inputItems.nameKana" />
+      <InputText
+        :inputItem="inputItems.nameKana"
+        :validator="
+          inputItems.nameKana.initValidator('名前(かな)', 'hiragana|required')
+        "
+      />
     </form-item>
   </div>
 </template>
