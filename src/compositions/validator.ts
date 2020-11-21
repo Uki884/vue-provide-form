@@ -106,3 +106,8 @@ export class Validator {
     this.#state.isValid = true
   }
 }
+
+export const createValidator = (name: string, scheme: string) => {
+  const func = new Validator(name, scheme);
+    return func;
+};

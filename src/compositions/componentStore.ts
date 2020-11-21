@@ -1,7 +1,6 @@
 import { InjectionKey, inject, provide, readonly } from "vue";
 
 import { set } from "lodash";
-import { Validator } from "@/compositions/validator";
 
 interface CreateComponentStore<T> {
   inputs: T;
@@ -47,20 +46,12 @@ const createInputs = (inputs: any, func: Function) => {
       const item = {} as any;
       item.keyName = input;
       item.value = inputs[input];
-      item.initValidator = (name: string, scheme: string) => {
-        const func = new Validator(name, scheme);
-        return func;
-      };
       item.setValue = createSetValue(input, func);
       result[input] = item;
     } else {
       const items = recursiveObject(inputs[input], input);
       for (const item of Object.keys(items)) {
         items[item].setValue = createSetValue(items[item].keyName, func);
-        items[item].initValidator = (name: string, scheme: string) => {
-          const func = new Validator(name, scheme);
-          return func;
-        };
         result[item] = items[item];
       }
     }
