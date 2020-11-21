@@ -6,9 +6,9 @@
   />
   <div>
     <p>validationMessage</p>
-    {{ inputItem.validator.validationMessage.value }}
+    {{ inputItem.validator.isValid }}
     <p>isValid</p>
-    {{ inputItem.validator.isValid.value }}
+    {{ inputItem.validator.errorMsg }}
   </div>
 </template>
 

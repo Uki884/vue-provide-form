@@ -31,7 +31,7 @@ export default defineComponent({
   components: {
     FormContent
   },
-  setup(props, context) {
+  setup(_props, _context) {
     const state = reactive<State>({
       name: "",
       nameKana: "",

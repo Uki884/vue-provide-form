@@ -1,27 +1,7 @@
-import { InjectionKey, inject, provide, readonly, ref, Ref } from "vue";
+import { InjectionKey, inject, provide, readonly } from "vue";
 
 import { set } from "lodash";
-
-const ValidateSchema = {
-  Number: {
-    schema: /^[0-9]*$/,
-    errorMessage: "数字で入力してください"
-  },
-  NumberHyphen: {
-    // eslint-disable-next-line no-useless-escape
-    schema: /^[0-9\-]+$/,
-    errorMessage: "数字とハイフン以外が入力されています"
-  },
-  Hiragana: {
-    schema: /^[ぁ-んー]+$/,
-    errorMessage: "ひらがなで入力してください"
-  },
-  Mail: {
-    // eslint-disable-next-line no-useless-escape
-    schema: /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
-    errorMessage: "正しい形式で入力してください"
-  }
-} as any;
+import { Validator } from "@/compositions/validator";
 
 interface CreateComponentStore<T> {
   inputs: T;
@@ -59,49 +39,6 @@ const createSetValue = (key: string, func: Function) => {
   };
   return setValue;
 };
-
-class Validator {
-  scheme: Ref<string>;
-  validationMessage: Ref<string>;
-  isValid: Ref<boolean>;
-  value: Ref<any>;
-  constructor() {
-    this.scheme = ref("");
-    this.validationMessage = ref("");
-    this.isValid = ref(false);
-    this.value = ref(null);
-  }
-
-  validate(scheme: string, value: any) {
-    this.setInit();
-    this.value.value = value;
-    this.scheme.value = scheme;
-    console.log("scheme", scheme);
-    if (scheme == "hiragana") {
-      this.validationMessage.value = this.format("Hiragana");
-    }
-  }
-
-  format(schemeName: string) {
-    const validScheme = ValidateSchema[schemeName];
-    const result = validScheme.schema.test(this.value.value);
-    console.log(result);
-    this.isValid.value = result;
-    if (!result) {
-      return validScheme.errorMessage;
-    }
-  }
-
-  required() {
-    if (!this.value) {
-      return false;
-    }
-    return true;
-  }
-  setInit() {
-    this.validationMessage.value = "";
-  }
-}
 
 const createInputs = (inputs: any, func: Function) => {
   const result = {} as any;
