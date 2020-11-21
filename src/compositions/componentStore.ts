@@ -16,7 +16,10 @@ const recursiveObject = (objects: any, name: string) => {
   const recursive = (objects: any, name: string): any => {
     if (typeof objects !== "object" || !objects) {
       const reName = name.split(".").join("_");
-      result[reName] = { keyName: name, value: objects };
+      result[reName] = {
+        keyName: name,
+        value: objects
+      };
       return result;
     } else if (typeof objects === "object") {
       for (const object in objects) {

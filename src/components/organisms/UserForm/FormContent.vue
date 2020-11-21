@@ -4,22 +4,43 @@
       <button @click="directSetValue">stateの直接変更はできない</button>
     </form-item>
     <user-info />
+    <form-item label="email">
+      <InputText
+        :inputItem="inputItems.email"
+        :validator="createValidator('メールアドレス', 'mail|required')"
+      />
+    </form-item>
     <form-item label="子供の名前">
-      <InputText :inputItem="inputItems.family_child_name" />
+      <InputText
+        :inputItem="inputItems.family_child_name"
+        :validator="createValidator('子供の名前', 'hiragana|required')"
+      />
     </form-item>
     <form-item label="子供の年齢">
-      <InputText :inputItem="inputItems.family_child_age" />
+      <InputText
+        :inputItem="inputItems.family_child_age"
+        :validator="createValidator('子供の年齢', 'hiragana|required')"
+      />
     </form-item>
     <form-item label="仕事開始年">
-      <InputText :inputItem="inputItems.job_start_year" />
+      <InputText
+        :inputItem="inputItems.job_start_year"
+        :validator="createValidator('仕事開始年', 'number|required')"
+      />
     </form-item>
     <form-item label="仕事開始月">
-      <InputText :inputItem="inputItems.job_start_month" />
+      <InputText
+        :inputItem="inputItems.job_start_month"
+        :validator="createValidator('仕事開始月', 'number|required')"
+      />
     </form-item>
     <form-item label="技能者">
       <input
         :value="inputItems.job_unemployed.value"
         @input="inputItems.job_unemployed.setValue($event.target.checked)"
+        @change="
+          createValidator('技能者', 'required').validate($event.target.checked)
+        "
         type="checkbox"
       />
     </form-item>
@@ -34,6 +55,7 @@ import BaseForm from "@/components/atoms/BaseForm.vue";
 import FormItem from "@/components/atoms/FormItem.vue";
 import UserInfo from "@/components/organisms/UserForm/UserInfo.vue";
 import { UserFormKey } from "@/compositions/storeKeys";
+import { createValidator } from "@/compositions/validator.ts";
 
 interface State {
   name: string;
@@ -64,10 +86,12 @@ export default defineComponent({
     const directSetValue = () => {
       inputs.name = "aaaa";
     };
+
     return {
       inputItems,
       useSetValue,
-      directSetValue
+      directSetValue,
+      createValidator
     };
   }
 });

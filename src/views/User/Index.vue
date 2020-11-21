@@ -2,6 +2,7 @@
   <div class="home">
     {{ state }}
     <FormContent />
+    <button @click="submit">送信</button>
   </div>
 </template>
 
@@ -31,7 +32,7 @@ export default defineComponent({
   components: {
     FormContent
   },
-  setup(props, context) {
+  setup(_props, _context) {
     const state = reactive<State>({
       name: "",
       nameKana: "",
