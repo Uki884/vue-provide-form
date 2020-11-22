@@ -7,43 +7,64 @@
     <form-item label="email">
       <InputText
         :inputItem="inputItems.email"
-        :validator="createValidator('メールアドレス', 'mail|required')"
+        :validator="
+          inputItems.email.useValidator('メールアドレス', 'mail|required')
+        "
       />
     </form-item>
     <form-item label="子供の名前">
       <InputText
         :inputItem="inputItems.family_child_name"
-        :validator="createValidator('子供の名前', 'hiragana|required')"
+        :validator="
+          inputItems.family_child_name.useValidator(
+            '子供の名前',
+            'hiragana|required'
+          )
+        "
       />
     </form-item>
     <form-item label="子供の年齢">
       <InputText
         :inputItem="inputItems.family_child_age"
-        :validator="createValidator('子供の年齢', 'hiragana|required')"
+        :validator="
+          inputItems.family_child_age.useValidator(
+            '子供の年齢',
+            'hiragana|required'
+          )
+        "
       />
     </form-item>
     <form-item label="仕事開始年">
       <InputText
         :inputItem="inputItems.job_start_year"
-        :validator="createValidator('仕事開始年', 'number|required')"
+        :validator="
+          inputItems.job_start_year.useValidator(
+            '仕事開始年',
+            'number|required'
+          )
+        "
       />
     </form-item>
     <form-item label="仕事開始月">
       <InputText
         :inputItem="inputItems.job_start_month"
-        :validator="createValidator('仕事開始月', 'number|required')"
+        :validator="
+          inputItems.job_start_month.useValidator(
+            '仕事開始月',
+            'number|required'
+          )
+        "
       />
     </form-item>
     <form-item label="技能者">
       <input
         :value="inputItems.job_unemployed.value"
         @input="inputItems.job_unemployed.setValue($event.target.checked)"
-        @change="
-          createValidator('技能者', 'required').validate($event.target.checked)
-        "
+        @change="jobUnemployed.validate($event.target.checked)"
         type="checkbox"
       />
     </form-item>
+    <button @click="submit">送信</button>
   </base-form>
 </template>
 
@@ -55,7 +76,6 @@ import BaseForm from "@/components/atoms/BaseForm.vue";
 import FormItem from "@/components/atoms/FormItem.vue";
 import UserInfo from "@/components/organisms/UserForm/UserInfo.vue";
 import { UserFormKey } from "@/compositions/storeKeys";
-import { createValidator } from "@/compositions/validator.ts";
 
 interface State {
   name: string;
@@ -78,20 +98,33 @@ export default defineComponent({
     UserInfo
   },
   setup(props, context) {
-    const { inputs, useSetValue, useInputs, inputItems } = useComponentStore<
-      State
-    >(UserFormKey);
-    console.log(inputItems);
-
+    const {
+      inputs,
+      useSetValue,
+      useInputs,
+      inputItems,
+      useValidators
+    } = useComponentStore<State>(UserFormKey);
     const directSetValue = () => {
       inputs.name = "aaaa";
     };
+
+    const submit = () => {
+      const result = useValidators.handleSubmit(inputs);
+      console.log(result);
+    };
+
+    const jobUnemployed = inputItems.job_unemployed.useValidator(
+      "技能者",
+      "required"
+    );
 
     return {
       inputItems,
       useSetValue,
       directSetValue,
-      createValidator
+      jobUnemployed,
+      submit
     };
   }
 });

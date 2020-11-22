@@ -1,4 +1,5 @@
-import { reactive } from "vue";
+import { reactive, Ref, ref } from "vue";
+import { get } from "lodash";
 
 const ValidateSchema = {
   required: {
@@ -84,6 +85,7 @@ export class Validator {
         }
       }
     }
+    return this.#state.isValid
   }
 
   _validate(scheme: any) {
@@ -94,20 +96,49 @@ export class Validator {
     }
   }
 
-  required() {
-    if (!this.#state.value) {
-      return false;
-    }
-    return true;
-  }
-
   init() {
     this.#state.errorMsg = [];
     this.#state.isValid = true
   }
 }
 
-export const createValidator = (name: string, scheme: string) => {
-  const func = new Validator(name, scheme);
-    return func;
-};
+export class Validators {
+  #validators: Ref<any>;
+  #isValid: boolean;
+  validationResults: boolean[]
+  constructor() {
+    this.#validators = ref<any>({})
+    this.#isValid = true
+    this.validationResults = []
+  }
+
+  createValidator(keyName: string, name: string, scheme: string) {
+    const validator = new Validator(name, scheme);
+    const validateCurrentValue: any = (value: any) => validator.validate(value)
+    this.#validators.value[keyName] = validateCurrentValue;
+    return validator;
+  }
+
+  handleSubmit(inputs: any) {
+    for (const validator in this.#validators.value) {
+      const result = get(inputs, validator);
+      const validResult = this.#validators.value[validator](result)
+      if (!validResult) {
+        this.#isValid = false
+      } else {
+        this.#isValid = true
+      }
+    }
+    return this.#isValid
+  }
+
+  get isValid() {
+    return this.#isValid
+  }
+
+  get validators() {
+    return this.#validators
+  }
+
+}
+

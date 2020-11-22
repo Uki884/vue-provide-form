@@ -2,7 +2,6 @@
   <div class="home">
     {{ state }}
     <FormContent />
-    <button @click="submit">送信</button>
   </div>
 </template>
 
@@ -44,7 +43,7 @@ export default defineComponent({
         }
       },
       job: {
-        unemployed: true,
+        unemployed: false,
         type: "テスト",
         start: {
           year: null,

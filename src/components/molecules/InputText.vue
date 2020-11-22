@@ -2,10 +2,10 @@
   <BaseInput
     :value="inputItem.value"
     @update="inputItem.setValue"
-    @input="validator.validate($event.target.value)"
+    @input="validator ? validator.validate($event.target.value) : null"
   />
   <div>
-    <div class="error">
+    <div v-if="validator" class="error">
       <span>{{ validator.errorMsg[0] }}</span>
     </div>
   </div>
