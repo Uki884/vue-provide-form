@@ -1,6 +1,5 @@
 <template>
   <slot
-    :inputValue="inputValue"
     :value="value"
     :setValue="setValue"
     :errors="errors"
@@ -9,6 +8,7 @@
 </template>
 
 <script lang="ts">
+import { Validator } from "@/compositions/validator";
 import { set } from "lodash";
 import { defineComponent, computed, getCurrentInstance } from "vue";
 
@@ -28,23 +28,20 @@ export default defineComponent({
     }
   },
   setup(props, { slots }) {
+    const validator = props.inputItem.useValidator(props.name, props.scheme);
+
     const setValue = (event: any) => {
       const targetValue = event.target.value;
       props.inputItem.setValue(targetValue);
-      props.inputItem.validator.validate(props.name, props.scheme, targetValue);
+      validator.validate(targetValue);
     };
 
-    const inputValue = computed({
-      set: (value: any) => setValue(value),
-      get: () => props.inputItem.value
-    });
-
     const errors = computed(() => {
-      return props.inputItem.validator.errorMsg;
+      return validator.errorMsg;
     });
 
     const isValid = computed(() => {
-      return props.inputItem.validator.isValid;
+      return validator.isValid;
     });
 
     const value = computed(() => {
@@ -53,7 +50,6 @@ export default defineComponent({
 
     return {
       setValue,
-      inputValue,
       value,
       errors,
       isValid

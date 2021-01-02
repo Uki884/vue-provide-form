@@ -4,14 +4,29 @@
       <button @click="directSetValue">stateの直接変更はできない</button>
     </form-item>
     <user-info />
+    <form-item label="email">
+      <InputText
+        :inputItem="inputItems.email"
+        scheme="mail|required"
+        name="メールアドレス"
+      />
+    </form-item>
     <form-item label="子供の名前">
-      <InputText :inputItem="inputItems.family_child_name" scheme="hiragana" />
+      <InputText
+        :inputItem="inputItems.family_child_name"
+        name="子供の名前"
+        scheme="hiragana|required"
+      />
     </form-item>
     <form-item label="子供の年齢">
       <InputText :inputItem="inputItems.family_child_age" name="子供の年齢" />
     </form-item>
     <form-item label="仕事開始年">
-      <InputText :inputItem="inputItems.job_start_year" />
+      <InputText
+        :inputItem="inputItems.job_start_year"
+        name="仕事開始年"
+        scheme="number|required"
+      />
     </form-item>
     <form-item label="仕事開始月">
       <InputText
@@ -27,6 +42,7 @@
         name="仕事開始月"
       />
     </form-item>
+    <button @click="submit">送信</button>
   </base-form>
 </template>
 
@@ -62,18 +78,33 @@ export default defineComponent({
     InputCheckbox
   },
   setup(props, context) {
-    const { inputs, useSetValue, useInputs, inputItems } = useComponentStore<
-      State
-    >(UserFormKey);
-    console.log(inputItems);
-
+    const {
+      inputs,
+      useSetValue,
+      useInputs,
+      inputItems,
+      useValidators
+    } = useComponentStore<State>(UserFormKey);
     const directSetValue = () => {
       inputs.name = "aaaa";
     };
+
+    const submit = () => {
+      const result = useValidators.handleSubmit(inputs);
+      console.log(result);
+    };
+
+    const jobUnemployed = inputItems.job_unemployed.useValidator(
+      "技能者",
+      "required"
+    );
+
     return {
       inputItems,
       useSetValue,
-      directSetValue
+      directSetValue,
+      jobUnemployed,
+      submit
     };
   }
 });

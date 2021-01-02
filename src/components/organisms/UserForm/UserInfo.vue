@@ -8,7 +8,11 @@
       />
     </form-item>
     <form-item label="名前(かな)">
-      <InputText :inputItem="inputItems.nameKana" />
+      <InputText
+        :inputItem="inputItems.nameKana"
+        name="名前(かな)"
+        scheme="hiragana|required"
+      />
     </form-item>
   </div>
 </template>

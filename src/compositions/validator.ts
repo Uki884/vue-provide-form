@@ -1,4 +1,5 @@
-import { reactive } from "vue";
+import { reactive, Ref, ref } from "vue";
+import { get } from "lodash";
 
 const ValidateSchema = {
   required: {
@@ -52,10 +53,10 @@ const ValidateSchema = {
 
 export class Validator {
   #state: any;
-  constructor() {
+  constructor(name: string, scheme: string) {
     this.#state = reactive({
-      scheme: '',
-      name: '',
+      scheme: scheme,
+      name: name,
       errorMsg: [],
       isValid: true,
       value: null
@@ -70,13 +71,10 @@ export class Validator {
     return this.#state.isValid
   }
 
-  validate(name: string, scheme: string, value: any) {
-    if (!scheme) return
+  validate(value: any) {
     this.init();
     this.#state.value = value;
-    this.#state.scheme = scheme;
-    this.#state.name = name;
-    const schemes = scheme.split('|');
+    const schemes = this.#state.scheme.split('|');
     for (const s of schemes) {
       if (ValidateSchema[s]) {
         const { result, message } = this._validate(ValidateSchema[s]);
@@ -86,6 +84,7 @@ export class Validator {
         }
       }
     }
+    return this.#state.isValid
   }
 
   _validate(scheme: any) {
@@ -96,15 +95,51 @@ export class Validator {
     }
   }
 
-  required() {
-    if (!this.#state.value) {
-      return false;
+  init() {
+    this.#state.errorMsg = [];
+    this.#state.isValid = true
+  }
+}
+
+export class Validators {
+  #validators: Ref<any>;
+  #isValid: boolean;
+  validationResults: boolean[]
+  #state: any
+  constructor() {
+    this.#validators = ref<any>({})
+    this.#isValid = true
+    this.validationResults = []
+  }
+
+  createValidator(keyName: string, name: string, scheme: string) {
+    const validator = new Validator(name, scheme);
+    const validateCurrentValue: any = (value: any) => validator.validate(value)
+    this.#validators.value[keyName] = validateCurrentValue;
+    return validator;
+  }
+
+  handleSubmit(inputs: any) {
+    for (const validator in this.#validators.value) {
+      const result = get(inputs, validator);
+      const validResult = this.#validators.value[validator](result)
+      if (!validResult) {
+        this.#isValid = false
+      } else {
+        this.#isValid = true
+      }
     }
-    return true;
+    return this.#isValid
   }
 
   init() {
     this.#state.errorMsg = []
     this.#state.isValid = true
   }
+
+  get validators() {
+    return this.#validators
+  }
+
 }
+

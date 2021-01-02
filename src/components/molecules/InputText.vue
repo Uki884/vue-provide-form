@@ -7,7 +7,7 @@
   >
     <BaseInput :value="value" @input="setValue" />
     <div>
-      <div>validationMessage: {{ errors[0] }}</div>
+      <div>validationMessage: {{ errors }}</div>
       <div>isValid: {{ isValid }}</div>
     </div>
   </VStoreInput>
@@ -30,4 +30,8 @@ export default defineComponent({
 });
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.error {
+  color: red;
+}
+</style>

@@ -43,7 +43,7 @@ export default defineComponent({
         }
       },
       job: {
-        unemployed: true,
+        unemployed: false,
         type: "テスト",
         start: {
           year: null,
