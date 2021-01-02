@@ -5,9 +5,9 @@
     :name="name"
     v-slot:default="{ value, setValue, errors, isValid }"
   >
-    <BaseInput :value="value" @input="setValue" />
+    <input :value="value" @input="setValue" type="checkbox" />
     <div>
-      <div>validationMessage: {{ errors[0] }}</div>
+      <div>validationMessage: {{ errors }}</div>
       <div>isValid: {{ isValid }}</div>
     </div>
   </VStoreInput>
@@ -19,7 +19,6 @@ import BaseInput from "@/components/atoms/BaseInput.vue";
 import VStoreInput from "@/components/organisms/VStoreInput.vue";
 export default defineComponent({
   components: {
-    BaseInput,
     VStoreInput
   },
   props: {

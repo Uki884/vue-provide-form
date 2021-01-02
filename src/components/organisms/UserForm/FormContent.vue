@@ -8,20 +8,23 @@
       <InputText :inputItem="inputItems.family_child_name" scheme="hiragana" />
     </form-item>
     <form-item label="子供の年齢">
-      <InputText :inputItem="inputItems.family_child_age" />
+      <InputText :inputItem="inputItems.family_child_age" name="子供の年齢" />
     </form-item>
     <form-item label="仕事開始年">
       <InputText :inputItem="inputItems.job_start_year" />
     </form-item>
     <form-item label="仕事開始月">
-      <InputText :inputItem="inputItems.job_start_month" scheme="required" />
+      <InputText
+        :inputItem="inputItems.job_start_month"
+        scheme="required"
+        name="仕事開始月"
+      />
     </form-item>
     <form-item label="技能者">
-      <input
-        :value="inputItems.job_unemployed.value"
-        @input="inputItems.job_unemployed.setValue($event.target.checked)"
-        @change="inputItems.job_unemployed.validate($event.target.checked)"
-        type="checkbox"
+      <InputCheckbox
+        :inputItem="inputItems.job_unemployed"
+        scheme="required"
+        name="仕事開始月"
       />
     </form-item>
   </base-form>
@@ -35,6 +38,7 @@ import BaseForm from "@/components/atoms/BaseForm.vue";
 import FormItem from "@/components/atoms/FormItem.vue";
 import UserInfo from "@/components/organisms/UserForm/UserInfo.vue";
 import { UserFormKey } from "@/compositions/storeKeys";
+import InputCheckbox from "@/components/molecules/InputCheckbox.vue";
 
 interface State {
   name: string;
@@ -54,7 +58,8 @@ export default defineComponent({
     BaseForm,
     FormItem,
     InputText,
-    UserInfo
+    UserInfo,
+    InputCheckbox
   },
   setup(props, context) {
     const { inputs, useSetValue, useInputs, inputItems } = useComponentStore<

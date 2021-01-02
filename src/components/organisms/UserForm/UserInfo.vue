@@ -1,7 +1,11 @@
 <template>
   <div class="user-info">
     <form-item label="名前">
-      <InputText :inputItem="inputItems.name" />
+      <InputText
+        :inputItem="inputItems.name"
+        scheme="required|hiragana"
+        name="名前"
+      />
     </form-item>
     <form-item label="名前(かな)">
       <InputText :inputItem="inputItems.nameKana" />
