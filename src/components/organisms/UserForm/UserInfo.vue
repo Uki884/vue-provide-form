@@ -3,15 +3,15 @@
     <form-item label="名前">
       <InputText
         :inputItem="inputItems.name"
-        :validator="inputItems.name.useValidator('名前', 'hiragana|required')"
+        scheme="required|hiragana"
+        name="名前"
       />
     </form-item>
     <form-item label="名前(かな)">
       <InputText
         :inputItem="inputItems.nameKana"
-        :validator="
-          inputItems.nameKana.useValidator('名前(かな)', 'hiragana|required')
-        "
+        name="名前(かな)"
+        scheme="hiragana|required"
       />
     </form-item>
   </div>

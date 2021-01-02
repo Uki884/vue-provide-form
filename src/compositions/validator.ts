@@ -55,9 +55,9 @@ export class Validator {
   #state: any;
   constructor(name: string, scheme: string) {
     this.#state = reactive({
-      scheme,
-      name,
-      errorMsg: '',
+      scheme: scheme,
+      name: name,
+      errorMsg: [],
       isValid: true,
       value: null
     });
@@ -72,7 +72,6 @@ export class Validator {
   }
 
   validate(value: any) {
-    if (!this.#state.scheme) return
     this.init();
     this.#state.value = value;
     const schemes = this.#state.scheme.split('|');
@@ -81,7 +80,7 @@ export class Validator {
         const { result, message } = this._validate(ValidateSchema[s]);
         if (!result) {
           this.#state.isValid = false
-          this.#state.errorMsg.unshift(message)
+          this.#state.errorMsg.push(message)
         }
       }
     }
@@ -106,6 +105,7 @@ export class Validators {
   #validators: Ref<any>;
   #isValid: boolean;
   validationResults: boolean[]
+  #state: any
   constructor() {
     this.#validators = ref<any>({})
     this.#isValid = true
@@ -132,8 +132,9 @@ export class Validators {
     return this.#isValid
   }
 
-  get isValid() {
-    return this.#isValid
+  init() {
+    this.#state.errorMsg = []
+    this.#state.isValid = true
   }
 
   get validators() {

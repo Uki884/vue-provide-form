@@ -7,61 +7,39 @@
     <form-item label="email">
       <InputText
         :inputItem="inputItems.email"
-        :validator="
-          inputItems.email.useValidator('メールアドレス', 'mail|required')
-        "
+        scheme="mail|required"
+        name="メールアドレス"
       />
     </form-item>
     <form-item label="子供の名前">
       <InputText
         :inputItem="inputItems.family_child_name"
-        :validator="
-          inputItems.family_child_name.useValidator(
-            '子供の名前',
-            'hiragana|required'
-          )
-        "
+        name="子供の名前"
+        scheme="hiragana|required"
       />
     </form-item>
     <form-item label="子供の年齢">
-      <InputText
-        :inputItem="inputItems.family_child_age"
-        :validator="
-          inputItems.family_child_age.useValidator(
-            '子供の年齢',
-            'hiragana|required'
-          )
-        "
-      />
+      <InputText :inputItem="inputItems.family_child_age" name="子供の年齢" />
     </form-item>
     <form-item label="仕事開始年">
       <InputText
         :inputItem="inputItems.job_start_year"
-        :validator="
-          inputItems.job_start_year.useValidator(
-            '仕事開始年',
-            'number|required'
-          )
-        "
+        name="仕事開始年"
+        scheme="number|required"
       />
     </form-item>
     <form-item label="仕事開始月">
       <InputText
         :inputItem="inputItems.job_start_month"
-        :validator="
-          inputItems.job_start_month.useValidator(
-            '仕事開始月',
-            'number|required'
-          )
-        "
+        scheme="required"
+        name="仕事開始月"
       />
     </form-item>
     <form-item label="技能者">
-      <input
-        :value="inputItems.job_unemployed.value"
-        @input="inputItems.job_unemployed.setValue($event.target.checked)"
-        @change="jobUnemployed.validate($event.target.checked)"
-        type="checkbox"
+      <InputCheckbox
+        :inputItem="inputItems.job_unemployed"
+        scheme="required"
+        name="仕事開始月"
       />
     </form-item>
     <button @click="submit">送信</button>
@@ -76,6 +54,7 @@ import BaseForm from "@/components/atoms/BaseForm.vue";
 import FormItem from "@/components/atoms/FormItem.vue";
 import UserInfo from "@/components/organisms/UserForm/UserInfo.vue";
 import { UserFormKey } from "@/compositions/storeKeys";
+import InputCheckbox from "@/components/molecules/InputCheckbox.vue";
 
 interface State {
   name: string;
@@ -95,7 +74,8 @@ export default defineComponent({
     BaseForm,
     FormItem,
     InputText,
-    UserInfo
+    UserInfo,
+    InputCheckbox
   },
   setup(props, context) {
     const {
