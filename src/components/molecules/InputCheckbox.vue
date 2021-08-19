@@ -1,5 +1,5 @@
 <template>
-  <VStoreInput
+  <InputProvider
     :inputItem="inputItem"
     :scheme="scheme"
     :name="name"
@@ -10,16 +10,16 @@
       <div>validationMessage: {{ errors }}</div>
       <div>isValid: {{ isValid }}</div>
     </div>
-  </VStoreInput>
+  </InputProvider>
 </template>
 
 <script lang="ts">
 import { defineComponent, computed } from "vue";
 import BaseInput from "@/components/atoms/BaseInput.vue";
-import VStoreInput from "@/components/organisms/VStoreInput.vue";
+import InputProvider from "@/components/InputProvider.vue";
 export default defineComponent({
   components: {
-    VStoreInput
+    InputProvider
   },
   props: {
     inputItem: Object,

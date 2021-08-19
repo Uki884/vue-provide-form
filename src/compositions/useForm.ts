@@ -1,13 +1,11 @@
 import { InjectionKey, inject, provide, readonly, reactive } from "vue";
-
 import { set } from "lodash";
 import { Validators } from "@/compositions/validator";
 
-interface CreateComponentStore<T> {
+export interface Form<T> {
   inputs: T;
   useSetValue: (key: string, payload: any) => void;
-  useInputs: (inputs: T) => any;
-  validate: any;
+  validate: () => boolean;
   inputItems: any;
 }
 
@@ -68,44 +66,35 @@ const createInputs = (inputs: any, func: Function, Validators: any) => {
   return { ...result };
 };
 
-export const createComponentStore = <T>(options: {
-  defaultValues: any;
-}): CreateComponentStore<T> => {
-  const inputs: T = readonly<any>(options.defaultValues);
+export const createForm = (options: { defaultValues: any }) => {
   const state = reactive(options.defaultValues);
+  const inputs = readonly(state);
   const validators = new Validators();
-  const setValue = <T>(key: string, payload: T) => {
-    set(state, key, payload);
-  };
 
-  const useInputs = () => {
-    return createInputs(state, setValue, validators);
+  const setValue = (key: string, payload: any) => {
+    set(state, key, payload);
   };
 
   return {
     inputs,
     useSetValue: setValue,
-    useInputs,
     validate: validators.validate(state),
     inputItems: createInputs(state, setValue, validators)
   };
 };
 
-export type Store = ReturnType<typeof createComponentStore>;
+export type Store = ReturnType<typeof createForm>;
 
-export const useComponentStore = <T>(
-  key: InjectionKey<Store>
-): CreateComponentStore<T | any> => {
-  const store = inject(key) as Store;
+export const Key: InjectionKey<Store> = Symbol("ValidateForm");
+
+export const useForm = <T>() => {
+  const store = inject(Key) as Form<T>;
   if (!store) {
     throw new Error("store is called without provider.");
   }
   return store;
 };
 
-export const provideComponentStore = <T>(
-  key: InjectionKey<Store>,
-  options: { defaultValues: T }
-) => {
-  provide(key, createComponentStore<T | any>(options));
+export const provideForm = (options: { defaultValues: any }) => {
+  provide(Key, createForm(options));
 };
