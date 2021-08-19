@@ -15,11 +15,7 @@
       />
     </form-item>
     <form-item label="子供の年齢">
-      <InputText
-        name="family.child.age"
-        :key="inputItems.key"
-        label="子供の年齢"
-      />
+      <InputText name="family.child.age" scheme="number" label="子供の年齢" />
     </form-item>
     <form-item label="仕事開始年">
       <InputText
@@ -70,9 +66,7 @@ export default defineComponent({
     InputCheckbox
   },
   setup(props, context) {
-    const { inputs, useSetValue, inputItems, validate } = useComponentStore<
-      State
-    >(UserFormKey);
+    const { inputs, validate } = useComponentStore<State>(UserFormKey);
 
     const directSetValue = () => {
       inputs.name = "aaaa";
@@ -84,8 +78,6 @@ export default defineComponent({
     };
 
     return {
-      inputItems,
-      useSetValue,
       directSetValue,
       submit
     };
