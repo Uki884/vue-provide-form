@@ -119,17 +119,19 @@ export class Validators {
     return validator;
   }
 
-  handleSubmit(inputs: any) {
-    for (const validator in this.#validators.value) {
-      const result = get(inputs, validator);
-      const validResult = this.#validators.value[validator](result)
-      if (!validResult) {
-        this.#isValid = false
-      } else {
-        this.#isValid = true
+  validate(inputs: any) {
+    return () => {
+      for (const validator in this.#validators.value) {
+        const result = get(inputs, validator);
+        const validResult = this.#validators.value[validator](result)
+        if (!validResult) {
+          this.#isValid = false
+        } else {
+          this.#isValid = true
+        }
       }
+      return this.#isValid
     }
-    return this.#isValid
   }
 
   init() {

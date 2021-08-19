@@ -1,12 +1,11 @@
 <template>
   <div class="home">
-    {{ state }}
     <FormContent />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from "vue";
+import { defineComponent } from "vue";
 import FormContent from "@/components/organisms/UserForm/FormContent.vue";
 import {
   provideComponentStore,
@@ -32,7 +31,7 @@ export default defineComponent({
     FormContent
   },
   setup(_props, _context) {
-    const state = reactive<State>({
+    const state = {
       name: "",
       nameKana: "",
       email: "",
@@ -51,12 +50,11 @@ export default defineComponent({
           day: null
         }
       }
-    });
-
-    provideComponentStore<State>(UserFormKey, state);
-    return {
-      state
     };
+
+    provideComponentStore<State>(UserFormKey, { defaultValues: state });
+
+    return {};
   }
 });
 </script>

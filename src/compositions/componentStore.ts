@@ -1,4 +1,4 @@
-import { InjectionKey, inject, provide, readonly } from "vue";
+import { InjectionKey, inject, provide, readonly, reactive } from "vue";
 
 import { set } from "lodash";
 import { Validators } from "@/compositions/validator";
@@ -7,7 +7,7 @@ interface CreateComponentStore<T> {
   inputs: T;
   useSetValue: (key: string, payload: any) => void;
   useInputs: (inputs: T) => any;
-  useValidators: any;
+  validate: any;
   inputItems: any;
 }
 
@@ -68,8 +68,11 @@ const createInputs = (inputs: any, func: Function, Validators: any) => {
   return { ...result };
 };
 
-export const createComponentStore = <T>(state: T): CreateComponentStore<T> => {
-  const inputs: T = readonly<any>(state);
+export const createComponentStore = <T>(options: {
+  defaultValues: any;
+}): CreateComponentStore<T> => {
+  const inputs: T = readonly<any>(options.defaultValues);
+  const state = reactive(options.defaultValues);
   const validators = new Validators();
   const setValue = <T>(key: string, payload: T) => {
     set(state, key, payload);
@@ -83,7 +86,7 @@ export const createComponentStore = <T>(state: T): CreateComponentStore<T> => {
     inputs,
     useSetValue: setValue,
     useInputs,
-    useValidators: validators,
+    validate: validators.validate(state),
     inputItems: createInputs(state, setValue, validators)
   };
 };
@@ -102,7 +105,7 @@ export const useComponentStore = <T>(
 
 export const provideComponentStore = <T>(
   key: InjectionKey<Store>,
-  state: T
+  options: { defaultValues: T }
 ) => {
-  provide(key, createComponentStore<T | any>(state));
+  provide(key, createComponentStore<T | any>(options));
 };

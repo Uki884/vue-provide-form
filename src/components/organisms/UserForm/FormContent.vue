@@ -70,20 +70,17 @@ export default defineComponent({
     InputCheckbox
   },
   setup(props, context) {
-    const {
-      inputs,
-      useSetValue,
-      useInputs,
-      inputItems,
-      useValidators
-    } = useComponentStore<State>(UserFormKey);
+    const { inputs, useSetValue, inputItems, validate } = useComponentStore<
+      State
+    >(UserFormKey);
+
     const directSetValue = () => {
       inputs.name = "aaaa";
     };
 
     const submit = () => {
-      const result = useValidators.handleSubmit(inputs);
-      console.log(result);
+      const isValid = validate();
+      console.log(isValid);
     };
 
     return {
