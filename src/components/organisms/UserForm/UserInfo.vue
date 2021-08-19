@@ -4,13 +4,15 @@
       <InputText
         :inputItem="inputItems.name"
         scheme="required|hiragana"
-        name="名前"
+        name="name"
+        label="名前"
       />
     </form-item>
     <form-item label="名前(かな)">
       <InputText
         :inputItem="inputItems.nameKana"
-        name="名前(かな)"
+        name="nameKana"
+        label="名前(かな)"
         scheme="hiragana|required"
       />
     </form-item>

@@ -10,7 +10,9 @@
 <script lang="ts">
 import { Validator } from "@/compositions/validator";
 import { set } from "lodash";
-import { defineComponent, computed, getCurrentInstance } from "vue";
+import { defineComponent, computed, getCurrentInstance, ref } from "vue";
+import { useComponentStore } from "@/compositions/componentStore";
+import { UserFormKey } from "@/compositions/storeKeys";
 
 export default defineComponent({
   props: {
@@ -25,14 +27,20 @@ export default defineComponent({
     name: {
       type: String,
       default: ""
+    },
+    label: {
+      type: String,
+      default: ""
     }
   },
   setup(props, { slots }) {
-    const validator = props.inputItem.useValidator(props.name, props.scheme);
+    const { inputItems } = useComponentStore(UserFormKey);
+    const item = inputItems[props.name];
+    const validator = item.useValidator(props.label, props.scheme);
 
     const setValue = (event: any) => {
       const targetValue = event.target.value;
-      props.inputItem.setValue(targetValue);
+      item.setValue(targetValue);
       validator.validate(targetValue);
     };
 
@@ -45,7 +53,7 @@ export default defineComponent({
     });
 
     const value = computed(() => {
-      return props.inputItem.value;
+      return item.value;
     });
 
     return {

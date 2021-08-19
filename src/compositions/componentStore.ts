@@ -21,8 +21,7 @@ const recursiveObject = (objects: any, name: string) => {
   const result = {} as any;
   const recursive = (objects: any, name: string): any => {
     if (typeof objects !== "object" || !objects) {
-      const reName = rename(name);
-      result[reName] = {
+      result[name] = {
         keyName: name,
         value: objects
       };

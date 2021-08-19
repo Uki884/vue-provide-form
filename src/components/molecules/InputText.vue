@@ -1,8 +1,8 @@
 <template>
   <VStoreInput
-    :inputItem="inputItem"
     :scheme="scheme"
     :name="name"
+    :label="label"
     v-slot:default="{ value, setValue, errors, isValid }"
   >
     <BaseInput :value="value" @input="setValue" />
@@ -23,9 +23,13 @@ export default defineComponent({
     VStoreInput
   },
   props: {
-    inputItem: Object,
     scheme: String,
-    name: String
+    name: String,
+    key: String,
+    label: String
+  },
+  setup(props, context) {
+    return {};
   }
 });
 </script>
