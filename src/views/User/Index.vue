@@ -7,11 +7,7 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import FormContent from "@/components/organisms/UserForm/FormContent.vue";
-import {
-  provideComponentStore,
-  createComponentStore
-} from "@/compositions/componentStore";
-import { UserFormKey } from "@/compositions/storeKeys";
+import { provideForm } from "@/compositions/useForm";
 
 interface State {
   name: string;
@@ -52,7 +48,7 @@ export default defineComponent({
       }
     };
 
-    provideComponentStore<State>(UserFormKey, { defaultValues: state });
+    provideForm({ defaultValues: state });
 
     return {};
   }

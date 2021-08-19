@@ -36,12 +36,11 @@
 
 <script lang="ts">
 import { defineComponent, computed } from "vue";
-import { useComponentStore } from "@/compositions/componentStore";
+import { useForm } from "@/compositions/useForm";
 import InputText from "@/components/molecules/InputText.vue";
 import BaseForm from "@/components/atoms/BaseForm.vue";
 import FormItem from "@/components/atoms/FormItem.vue";
 import UserInfo from "@/components/organisms/UserForm/UserInfo.vue";
-import { UserFormKey } from "@/compositions/storeKeys";
 import InputCheckbox from "@/components/molecules/InputCheckbox.vue";
 
 interface State {
@@ -66,7 +65,7 @@ export default defineComponent({
     InputCheckbox
   },
   setup(props, context) {
-    const { inputs, validate } = useComponentStore<State>(UserFormKey);
+    const { inputs, validate } = useForm<State>();
 
     const directSetValue = () => {
       inputs.name = "aaaa";

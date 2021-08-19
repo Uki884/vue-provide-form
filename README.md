@@ -1,4 +1,4 @@
-# vue3-component-store
+# vue validate form
 
 コンポーネント単位のstoreを作成する。
 atomic designで辛いpropsバケツリレーを解消したかった。

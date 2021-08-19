@@ -8,11 +8,8 @@
 </template>
 
 <script lang="ts">
-import { Validator } from "@/compositions/validator";
-import { set } from "lodash";
-import { defineComponent, computed, getCurrentInstance, ref } from "vue";
-import { useComponentStore } from "@/compositions/componentStore";
-import { UserFormKey } from "@/compositions/storeKeys";
+import { defineComponent, computed } from "vue";
+import { useForm } from "@/compositions/useForm";
 
 export default defineComponent({
   props: {
@@ -34,12 +31,15 @@ export default defineComponent({
     }
   },
   setup(props, { slots }) {
-    const { inputItems } = useComponentStore(UserFormKey);
+    const { inputItems } = useForm();
     const item = inputItems[props.name];
+    if (!item) {
+      throw new Error(`${props.name} is invalid key`);
+    }
     const validator = item.useValidator(props.label, props.scheme);
 
-    const setValue = (event: any) => {
-      const targetValue = event.target.value;
+    const setValue = (event: Event) => {
+      const targetValue = (event.target as HTMLInputElement).value;
       item.setValue(targetValue);
       validator.validate(targetValue);
     };
