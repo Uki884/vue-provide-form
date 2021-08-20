@@ -1,12 +1,17 @@
 {
-  "name": "vue3-component-store",
-  "version": "0.1.0",
+  "name": "vue-validate-form",
+  "version": "0.0.1",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "build": "npm run build:lib && npm run build:type",
+    "lint": "vue-cli-service lint",
+    "build:lib": "vue-cli-service build --target lib --name vue-validate-form ./src/main.ts",
+    "build:type": "tsc --emitDeclarationOnly --declaration --outDir ./dist"
   },
+  "main": "./dist/vue-validate-form.common.js",
+  "unpkg": "./dist/vue-validate-form.umd.min.js",
+  "jsdelivr": "./dist/vue-validate-form.umd.min.js",
+  "typings": "./dist/main.d.ts",
   "dependencies": {
     "@types/lodash": "^4.14.165",
     "core-js": "^3.6.5",

@@ -1,30 +1,59 @@
-import { InjectionKey, inject, provide, readonly, reactive } from "vue";
+import {
+  InjectionKey,
+  inject,
+  provide,
+  readonly,
+  reactive,
+  watch,
+  computed,
+  Ref
+} from "vue";
 import { set } from "lodash";
 import { Validators } from "@/compositions/validator";
+import { isObject } from "@/utils";
+
+export interface FormItems {
+  [key: string]: {
+    keyName: string;
+    value: string;
+    setValue?: (key: string, value: any) => any;
+    useValidator?: (name: string, scheme: string) => any;
+  };
+}
+export interface FormItem {
+  keyName: string;
+  value: any;
+  useValidator: (name: string, scheme: string) => any;
+  setValue: SetValue;
+}
+
+export type SetValue = (key: string, value: any) => void;
 
 export interface Form<T> {
   inputs: T;
   useSetValue: (key: string, payload: any) => void;
   validate: () => boolean;
-  inputItems: any;
+  inputItems: Ref<any>;
 }
 
 const rename = (name: string) => {
   return name.split(".").join("_");
 };
 
-const recursiveObject = (objects: any, name: string) => {
+const recursiveObjects = (objects: any, name: string): FormItems => {
   const items = objects;
-  if (typeof items !== "object") return;
-  const result = {} as any;
+  if (!isObject(items)) {
+    throw new Error("not object");
+  }
+  const result = {} as FormItems;
   const recursive = (objects: any, name: string): any => {
-    if (typeof objects !== "object" || !objects) {
+    if (!isObject(objects) || !objects) {
       result[name] = {
         keyName: name,
         value: objects
       };
       return result;
-    } else if (typeof objects === "object") {
+    } else if (isObject(objects)) {
       for (const object in objects) {
         recursive(objects[object], name + "." + object);
       }
@@ -35,7 +64,7 @@ const recursiveObject = (objects: any, name: string) => {
   return recursive(items, name);
 };
 
-const createSetValue = (key: string, func: Function) => {
+const createSetValue = (key: string, func: Function): SetValue => {
   const setValue = (payload: any) => {
     return func(key, payload);
   };
@@ -43,24 +72,28 @@ const createSetValue = (key: string, func: Function) => {
 };
 
 const createInputs = (inputs: any, func: Function, Validators: any) => {
-  const result = {} as any;
+  const result = {} as FormItems;
   for (const input of Object.keys(inputs)) {
-    if (typeof inputs[input] !== "object") {
-      const item = {} as any;
-      item.keyName = input;
-      item.value = inputs[input];
-      item.useValidator = (name: string, scheme: string) =>
-        Validators.createValidator(item.keyName, name, scheme);
-      item.setValue = createSetValue(input, func);
-      result[input] = item;
-    } else {
-      const items = recursiveObject(inputs[input], input);
+    if (Array.isArray(inputs[input])) {
+      throw new Error(`array is not supported. key: ${input}`);
+    }
+
+    if (isObject(inputs[input])) {
+      const items = recursiveObjects(inputs[input], input);
       for (const item of Object.keys(items)) {
         items[item].setValue = createSetValue(items[item].keyName, func);
         items[item].useValidator = (name: string, scheme: string) =>
           Validators.createValidator(items[item].keyName, name, scheme);
         result[item] = items[item];
       }
+    } else {
+      const item = {} as FormItem;
+      item.keyName = input;
+      // item.value = inputs[input];
+      item.useValidator = (name: string, scheme: string) =>
+        Validators.createValidator(item.keyName, name, scheme);
+      item.setValue = createSetValue(input, func);
+      result[input] = item;
     }
   }
   return { ...result };
@@ -75,11 +108,15 @@ export const createForm = (options: { defaultValues: any }) => {
     set(state, key, payload);
   };
 
+  const inputItems = computed(() => {
+    return createInputs(state, setValue, validators);
+  });
+
   return {
     inputs,
     useSetValue: setValue,
     validate: validators.validate(state),
-    inputItems: createInputs(state, setValue, validators)
+    inputItems: inputItems
   };
 };
 

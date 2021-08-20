@@ -1,9 +1,10 @@
-import { createApp } from "vue";
-import App from "./App.vue";
-import router from "./router";
-import store from "./store";
+import { App } from "vue";
+import InputProvider from "./components/InputProvider.vue";
+export * from "./compositions/useForm";
 
-createApp(App)
-  .use(store)
-  .use(router)
-  .mount("#app");
+const install: any = (vue: App) => {
+  vue.component(InputProvider.name, InputProvider);
+};
+
+export default { install };
+export { InputProvider };
