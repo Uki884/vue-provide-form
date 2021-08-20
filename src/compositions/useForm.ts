@@ -1,4 +1,13 @@
-import { InjectionKey, inject, provide, readonly, reactive } from "vue";
+import {
+  InjectionKey,
+  inject,
+  provide,
+  readonly,
+  reactive,
+  watch,
+  computed,
+  Ref
+} from "vue";
 import { set } from "lodash";
 import { Validators } from "@/compositions/validator";
 import { isObject } from "@/utils";
@@ -24,7 +33,7 @@ export interface Form<T> {
   inputs: T;
   useSetValue: (key: string, payload: any) => void;
   validate: () => boolean;
-  inputItems: any;
+  inputItems: Ref<any>;
 }
 
 const rename = (name: string) => {
@@ -80,7 +89,7 @@ const createInputs = (inputs: any, func: Function, Validators: any) => {
     } else {
       const item = {} as FormItem;
       item.keyName = input;
-      item.value = inputs[input];
+      // item.value = inputs[input];
       item.useValidator = (name: string, scheme: string) =>
         Validators.createValidator(item.keyName, name, scheme);
       item.setValue = createSetValue(input, func);
@@ -99,7 +108,9 @@ export const createForm = (options: { defaultValues: any }) => {
     set(state, key, payload);
   };
 
-  const inputItems = createInputs(state, setValue, validators);
+  const inputItems = computed(() => {
+    return createInputs(state, setValue, validators);
+  });
 
   return {
     inputs,

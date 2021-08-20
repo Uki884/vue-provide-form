@@ -8,10 +8,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from "vue";
+import { defineComponent, computed, watch } from "vue";
 import { useForm } from "@/compositions/useForm";
+import { get } from "lodash";
 
 export default defineComponent({
+  name: "InputProvider",
   props: {
     inputItem: {
       type: Object,
@@ -31,10 +33,11 @@ export default defineComponent({
     }
   },
   setup(props, { slots }) {
-    const { inputItems } = useForm();
-    const item = inputItems[props.name];
+    const { inputItems, inputs } = useForm();
+    const item = inputItems.value[props.name];
     if (!item) {
-      throw new Error(`${props.name} is invalid key`);
+      const keys = Object.keys(inputItems.value);
+      throw new Error(`${props.name} is invalid key. available keys: ${keys}`);
     }
     const validator = item.useValidator(props.label, props.scheme);
 
@@ -53,7 +56,7 @@ export default defineComponent({
     });
 
     const value = computed(() => {
-      return item.value;
+      return get(inputs, item.keyName);
     });
 
     return {
