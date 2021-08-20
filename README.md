@@ -1,4 +1,4 @@
-# vue validate form
+# VueValidateForm
 
 ## Installation
 
