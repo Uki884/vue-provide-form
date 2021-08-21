@@ -1,13 +1,13 @@
-# VueValidateForm
+# VueProvideForm
 
 ## Installation
 
 ```
 // with npm
-npm install vue-validate-form
+npm install vue-provide-form
 
 // with yarn
-yarn add vue-validate-form
+yarn add vue-provide-form
 ```
 
 
@@ -17,10 +17,10 @@ Import Vue and VueValidateForm in your code:
 
 ```js
 import { createApp } from "vue";
-import VueValiteForm from "vue-validate-form";
+import VueProvideForm from "vue-provide-form";
 
 createApp(App)
-  .use(VueValiteForm)
+  .use(VueProvideForm)
   .mount("#app");
 ```
 ※ Vue 2 not supported yet
@@ -29,7 +29,7 @@ provide state to Form in the top level components
 ※ Array not supported yet
 
 ```js
-import { provideForm } from "vue-validate-form";
+import { provideForm } from "vue-provide-form";
   const state = {
     name: "",
     nameKana: "",
@@ -48,7 +48,7 @@ to using form state, inject in the children components
 
 ```js
 import { defineComponent, computed } from "vue";
-import { useForm } from "vue-validate-form";
+import { useForm } from "vue-provide-form";
 
 export default defineComponent({
   name: "FormContent",
@@ -88,7 +88,7 @@ Wrap your inputs with the ``InputProvider``
 Submit form
 
 ```js
-import { useForm } from "vue-validate-form";
+import { useForm } from "vue-provide-form";
 setup(props, context) {
   const { inputs, validate } = useForm<State>();
 

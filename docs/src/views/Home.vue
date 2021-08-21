@@ -7,7 +7,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { provideForm } from "vue-validate-form";
+import { provideForm } from "vue-provide-form";
 import FormContent from "@/components/FormContent.vue";
 
 export default defineComponent({

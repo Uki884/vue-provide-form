@@ -10,8 +10,8 @@
   "dependencies": {
     "core-js": "^3.6.5",
     "vue": "^3.2.4",
+    "vue-provide-form": "../",
     "vue-router": "^4.0.0-0",
-    "vue-validate-form": "../",
     "vuex": "^4.0.0-0"
   },
   "devDependencies": {

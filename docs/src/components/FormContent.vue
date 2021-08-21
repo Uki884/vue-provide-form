@@ -36,7 +36,7 @@
 
 <script lang="ts">
 import { defineComponent, computed } from "vue";
-import { useForm } from "vue-validate-form";
+import { useForm } from "vue-provide-form";
 import InputText from "@/components/InputText.vue";
 import BaseForm from "@/components/BaseForm.vue";
 import FormItem from "@/components/FormItem.vue";
