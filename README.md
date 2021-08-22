@@ -9,10 +9,7 @@ npm install vue-provide-form
 // with yarn
 yarn add vue-provide-form
 ```
-
-
 ## Usage
-
 ### Import Vue and VueValidateForm in your code:
 
 ```js
@@ -115,24 +112,28 @@ manually set value
 
 ### Submit form
 
+If there is a validation error, the callback function will not be executed
+
 ```js
+<template>
+  <button @click="handleSubmit(handleSave)" />
+</template>
+
 import { useForm } from "vue-provide-form";
 setup(props, context) {
-  const { inputs, validate } = useForm<State>();
+  const { inputs, handleSubmit, fieldValues } = useForm<State>();
 
-  const handleSubmit = () => {
-    const isValid = validate();
-    console.log(isValid);
+  const handleSave = (data: State) => {
+    console.log(data);
   };
 
   return {
     handleSubmit,
-    inputs
+    handleSave
   };
 }
 
 ```
-
 
 # Next
 
