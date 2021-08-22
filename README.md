@@ -10,7 +10,7 @@ npm install vue-provide-form
 yarn add vue-provide-form
 ```
 ## Usage
-### Import Vue and VueValidateForm in your code:
+### Import Vue and VueProvideForm in your code:
 
 ```js
 import { createApp } from "vue";
