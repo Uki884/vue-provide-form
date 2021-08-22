@@ -53,9 +53,9 @@ const ValidateSchema = {
 
 export class Validator {
   #state: any;
-  constructor(name: string, scheme: string) {
+  constructor(name: string, schema: string) {
     this.#state = reactive({
-      scheme: scheme,
+      schema: schema,
       name: name,
       errorMsg: [],
       isValid: true,
@@ -74,8 +74,8 @@ export class Validator {
   validate(value: any) {
     this.init();
     this.#state.value = value;
-    const schemes = this.#state.scheme.split('|');
-    for (const s of schemes) {
+    const schemas = this.#state.schema.split('|');
+    for (const s of schemas) {
       if (ValidateSchema[s]) {
         const { result, message } = this._validate(ValidateSchema[s]);
         if (!result) {
@@ -87,11 +87,11 @@ export class Validator {
     return this.#state.isValid
   }
 
-  _validate(scheme: any) {
-    const result = scheme.validate(this.#state.value)
+  _validate(schema: any) {
+    const result = schema.validate(this.#state.value)
     return {
       result,
-      message: scheme.message(this.#state.name)
+      message: schema.message(this.#state.name)
     }
   }
 
@@ -112,8 +112,8 @@ export class Validators {
     this.validationResults = []
   }
 
-  createValidator(keyName: string, name: string, scheme: string) {
-    const validator = new Validator(name, scheme);
+  createValidator(keyName: string, name: string, schema: string) {
+    const validator = new Validator(name, schema);
     const validateCurrentValue: any = (value: any) => validator.validate(value)
     this.#validators.value[keyName] = validateCurrentValue;
     return validator;

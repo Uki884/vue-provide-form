@@ -17,13 +17,13 @@ export interface FormItems {
     keyName: string;
     value: string;
     setValue?: (key: string, value: any) => any;
-    useValidator?: (name: string, scheme: string) => any;
+    useValidator?: (name: string, schema: string) => any;
   };
 }
 export interface FormItem {
   keyName: string;
   value: any;
-  useValidator: (name: string, scheme: string) => any;
+  useValidator: (name: string, schema: string) => any;
   setValue: SetValue;
 }
 
@@ -31,6 +31,7 @@ export type SetValue = (key: string, value: any) => void;
 
 export interface Form<T> {
   inputs: T;
+  fieldValues: T;
   useSetValue: (key: string, payload: any) => void;
   validate: () => boolean;
   handleSubmit: (cb?: Function) => void;
@@ -83,16 +84,16 @@ const createInputs = (inputs: any, func: Function, Validators: any) => {
       const items = recursiveObjects(inputs[input], input);
       for (const item of Object.keys(items)) {
         items[item].setValue = createSetValue(items[item].keyName, func);
-        items[item].useValidator = (name: string, scheme: string) =>
-          Validators.createValidator(items[item].keyName, name, scheme);
+        items[item].useValidator = (name: string, schema: string) =>
+          Validators.createValidator(items[item].keyName, name, schema);
         result[item] = items[item];
       }
     } else {
       const item = {} as FormItem;
       item.keyName = input;
       // item.value = inputs[input];
-      item.useValidator = (name: string, scheme: string) =>
-        Validators.createValidator(item.keyName, name, scheme);
+      item.useValidator = (name: string, schema: string) =>
+        Validators.createValidator(item.keyName, name, schema);
       item.setValue = createSetValue(input, func);
       result[input] = item;
     }
@@ -123,6 +124,7 @@ export const createForm = (options: { defaultValues: any }) => {
 
   return {
     inputs,
+    fieldValues: state,
     useSetValue: setValue,
     validate: validators.validate(state),
     handleSubmit,
