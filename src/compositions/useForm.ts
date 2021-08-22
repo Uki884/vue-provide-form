@@ -33,6 +33,7 @@ export interface Form<T> {
   inputs: T;
   useSetValue: (key: string, payload: any) => void;
   validate: () => boolean;
+  handleSubmit: (cb?: Function) => void;
   inputItems: Ref<any>;
 }
 
@@ -112,10 +113,19 @@ export const createForm = (options: { defaultValues: any }) => {
     return createInputs(state, setValue, validators);
   });
 
+  const handleSubmit = (cb?: Function) => {
+    const isValid = validators.validate(state)();
+    if (!isValid) {
+      return;
+    }
+    cb && cb(inputs);
+  };
+
   return {
     inputs,
     useSetValue: setValue,
     validate: validators.validate(state),
+    handleSubmit,
     inputItems: inputItems
   };
 };

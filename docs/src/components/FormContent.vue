@@ -30,7 +30,7 @@
     <!-- <form-item label="技能者">
       <InputCheckbox scheme="required" name="job.unemployed" label="仕事終了" />
     </form-item> -->
-    <button @click="submit">送信</button>
+    <button @click="handleSubmit(submit)">送信</button>
   </BaseForm>
 </template>
 
@@ -60,17 +60,17 @@ export default defineComponent({
     InputText
   },
   setup(props, context) {
-    const { inputs, validate } = useForm<State>();
+    const { inputs, handleSubmit, fieldValues } = useForm<State>();
     const directSetValue = () => {
       inputs.name = "aaaa";
     };
-    const submit = () => {
-      const isValid = validate();
-      console.log(isValid);
+    const submit = (data: State) => {
+      console.log(data);
     };
     return {
       directSetValue,
       submit,
+      handleSubmit,
       inputs
     };
   }
