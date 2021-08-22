@@ -5,42 +5,59 @@
       <button @click="directSetValue">stateの直接変更はできない</button>
     </form-item>
     <FormItem label="email">
-      <InputText scheme="mail|required" name="email" label="メールアドレス" />
+      <InputText
+        v-model="fieldValues.email"
+        schema="mail|required"
+        name="email"
+        label="メールアドレス"
+      />
     </FormItem>
     <FormItem label="子供の名前">
       <InputText
+        v-model="fieldValues.family.child.name"
         name="family.child.name"
         label="子供の名前"
-        scheme="hiragana|required"
+        schema="hiragana|required"
       />
     </FormItem>
     <FormItem label="子供の年齢">
-      <InputText name="family.child.age" scheme="number" label="子供の年齢" />
+      <InputText
+        v-model="fieldValues.family.child.age"
+        name="family.child.age"
+        schema="number"
+        label="子供の年齢"
+      />
     </FormItem>
     <FormItem label="仕事開始年">
       <InputText
+        v-model="fieldValues.job.start.year"
         name="job.start.year"
-        scheme="number|required"
+        schema="number|required"
         label="仕事開始年"
       />
     </FormItem>
     <FormItem label="仕事開始月">
-      <InputText scheme="required" name="job.start.month" label="仕事開始月" />
+      <InputText
+        v-model="fieldValues.job.start.month"
+        schema="required"
+        name="job.start.month"
+        label="仕事開始月"
+      />
     </FormItem>
     <!-- <form-item label="技能者">
-      <InputCheckbox scheme="required" name="job.unemployed" label="仕事終了" />
+      <InputCheckbox schema="required" name="job.unemployed" label="仕事終了" />
     </form-item> -->
     <button @click="handleSubmit(submit)">送信</button>
   </BaseForm>
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from "vue";
+import { defineComponent } from "vue";
 import { useForm } from "vue-provide-form";
 import InputText from "@/components/InputText.vue";
 import BaseForm from "@/components/BaseForm.vue";
 import FormItem from "@/components/FormItem.vue";
-// import InputCheckbox from "@/components/molecules/InputCheckbox.vue";
+
 interface State {
   name: string;
   nameKana: string;
@@ -59,7 +76,7 @@ export default defineComponent({
     FormItem,
     InputText
   },
-  setup(props, context) {
+  setup() {
     const { inputs, handleSubmit, fieldValues } = useForm<State>();
     const directSetValue = () => {
       inputs.name = "aaaa";
@@ -68,6 +85,7 @@ export default defineComponent({
       console.log(data);
     };
     return {
+      fieldValues,
       directSetValue,
       submit,
       handleSubmit,

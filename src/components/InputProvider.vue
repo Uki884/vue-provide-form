@@ -3,8 +3,9 @@
     :value="value"
     :setValue="setValue"
     :errors="errors"
+    :fieldValues="fieldValues"
     :isValid="isValid"
-  ></slot>
+  />
 </template>
 
 <script lang="ts">
@@ -13,13 +14,14 @@ import { useForm } from "@/compositions/useForm";
 import { get } from "lodash";
 
 export default defineComponent({
+  inheritAttrs: false,
   name: "InputProvider",
   props: {
     inputItem: {
       type: Object,
       default: null
     },
-    scheme: {
+    schema: {
       type: String,
       default: ""
     },
@@ -33,13 +35,14 @@ export default defineComponent({
     }
   },
   setup(props, { slots }) {
-    const { inputItems, inputs } = useForm();
+    const { inputItems, inputs, fieldValues } = useForm();
     const item = inputItems.value[props.name];
     if (!item) {
       const keys = Object.keys(inputItems.value);
       throw new Error(`${props.name} is invalid key. available keys: ${keys}`);
     }
-    const validator = item.useValidator(props.label, props.scheme);
+
+    const validator = item.useValidator(props.label, props.schema);
 
     const setValue = (event: Event) => {
       const targetValue = (event.target as HTMLInputElement).value;
@@ -59,7 +62,16 @@ export default defineComponent({
       return get(inputs, item.keyName);
     });
 
+    watch(
+      () => get(fieldValues, item.keyName),
+      value => {
+        validator.validate(value);
+      },
+      { deep: true }
+    );
+
     return {
+      fieldValues,
       setValue,
       value,
       errors,
