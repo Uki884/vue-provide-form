@@ -47,7 +47,6 @@ export default defineComponent({
     const setValue = (event: Event) => {
       const targetValue = (event.target as HTMLInputElement).value;
       item.setValue(targetValue);
-      validator.validate(targetValue);
     };
 
     const errors = computed(() => {
