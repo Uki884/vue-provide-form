@@ -13,7 +13,7 @@ yarn add vue-provide-form
 
 ## Usage
 
-Import Vue and VueValidateForm in your code:
+### Import Vue and VueValidateForm in your code:
 
 ```js
 import { createApp } from "vue";
@@ -25,7 +25,7 @@ createApp(App)
 ```
 ※ Vue 2 not supported yet
 
-provide state to Form in the top level components  
+### Provide state to Form in the top level components  
 ※ Array not supported yet
 
 ```js
@@ -44,7 +44,7 @@ import { provideForm } from "vue-provide-form";
 provideForm({ defaultValues: state });
 ```
 
-to using form state, inject in the children components
+### To using form state, inject in the children components
 
 ```js
 import { defineComponent, computed } from "vue";
@@ -67,12 +67,40 @@ export default defineComponent({
 });
 ```
 
-Wrap your inputs with the ``InputProvider``  
-※ v-model is not supported yet
+### Wrap your inputs with the ``InputProvider``  
+
+use v-model
 
 ```js
 <InputProvider
-  scheme="required"
+  schema="required"
+  name="family.child.age"
+  label="label"
+  v-slot:default="{ errors, isValid }"
+>
+  <input v-model="fieldValues.family.child.age" />
+  <div>
+    <div>validationMessage: {{ errors }}</div>
+    <div>isValid: {{ isValid }}</div>
+  </div>
+</InputProvider>
+import { useForm } from "vue-provide-form";
+
+export default defineComponent({
+  setup() {
+    const { fieldValues } = useForm<State>();
+    return {
+      fieldValues,
+    };
+  }
+});
+```
+
+manually set value
+
+```js
+<InputProvider
+  schema="required"
   name="family.child.age"
   label="label"
   v-slot:default="{ value, setValue, errors, isValid }"
@@ -85,7 +113,7 @@ Wrap your inputs with the ``InputProvider``
 </InputProvider>
 ```
 
-Submit form
+### Submit form
 
 ```js
 import { useForm } from "vue-provide-form";
@@ -110,5 +138,5 @@ setup(props, context) {
 
 - support Array
 - support custom validate schema
-- support v-model
+- add options(immediately validation etc... )
 
