@@ -1,13 +1,15 @@
 <template>
   <InputProvider
-    :scheme="scheme"
+    :schema="schema"
     :name="name"
     :label="label"
-    v-slot:default="{ value, setValue, errors, isValid }"
+    v-slot="{ errors, isValid }"
   >
-    <input :value="value" @input="setValue" />
+    <input
+      :value="modelValue"
+      @input="$emit('update:modelValue', $event.target.value)"
+    />
     <div>
-      {{ value }}
       <div>validationMessage: {{ errors }}</div>
       <div>isValid: {{ isValid }}</div>
     </div>
@@ -19,13 +21,11 @@ import { defineComponent } from "vue";
 
 export default defineComponent({
   props: {
-    scheme: String,
+    modelValue: [String, Number],
+    schema: String,
     name: String,
     key: String,
     label: String
-  },
-  setup(props, context) {
-    return {};
   }
 });
 </script>
