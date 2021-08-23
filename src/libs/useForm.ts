@@ -9,7 +9,7 @@ import {
   Ref
 } from "vue";
 import { set } from "lodash";
-import { Validators } from "@/compositions/validator";
+import { Validators } from "@/libs/validators";
 import { isObject } from "@/utils";
 
 export interface FormItems {
@@ -37,10 +37,6 @@ export interface Form<T> {
   handleSubmit: (cb?: Function) => void;
   inputItems: Ref<any>;
 }
-
-const rename = (name: string) => {
-  return name.split(".").join("_");
-};
 
 const recursiveObjects = (objects: any, name: string): FormItems => {
   const items = objects;
@@ -134,7 +130,7 @@ export const createForm = (options: { defaultValues: any }) => {
 
 export type Store = ReturnType<typeof createForm>;
 
-export const Key: InjectionKey<Store> = Symbol("ValidateForm");
+export const Key: InjectionKey<Store> = Symbol("ProvideForm");
 
 export const useForm = <T>() => {
   const store = inject(Key) as Form<T>;

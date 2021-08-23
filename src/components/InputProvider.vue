@@ -10,7 +10,7 @@
 
 <script lang="ts">
 import { defineComponent, computed, watch } from "vue";
-import { useForm } from "@/compositions/useForm";
+import { useForm } from "@/libs/useForm";
 import { get } from "lodash";
 
 export default defineComponent({
