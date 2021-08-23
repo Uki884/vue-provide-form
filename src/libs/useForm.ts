@@ -8,7 +8,7 @@ import {
   computed,
   Ref
 } from "vue";
-import { set } from "lodash";
+import set from "just-safe-set";
 import { Validators } from "@/libs/validators";
 import { isObject } from "@/utils";
 

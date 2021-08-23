@@ -11,7 +11,7 @@
 <script lang="ts">
 import { defineComponent, computed, watch } from "vue";
 import { useForm } from "@/libs/useForm";
-import { get } from "lodash";
+import get from "just-safe-get";
 
 export default defineComponent({
   inheritAttrs: false,
@@ -35,7 +35,7 @@ export default defineComponent({
     }
   },
   setup(props, { slots }) {
-    const { inputItems, inputs, fieldValues } = useForm();
+    const { inputItems, inputs, fieldValues } = useForm<any>();
     const item = inputItems.value[props.name];
     if (!item) {
       const keys = Object.keys(inputItems.value);

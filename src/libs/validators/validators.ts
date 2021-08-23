@@ -1,4 +1,4 @@
-import { get } from "lodash";
+import get from 'just-safe-get';
 import { ref, Ref } from "vue";
 import { Validator } from "./validator";
 
