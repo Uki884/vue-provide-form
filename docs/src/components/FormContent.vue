@@ -44,6 +44,20 @@
         label="仕事開始月"
       />
     </FormItem>
+    <div v-for="(array, index) in fieldValues.array" :key="index">
+      <InputText
+        v-model="array.test"
+        schema="required"
+        :name="`array.${index}.test`"
+        :label="`テスト${index}テスト`"
+      />
+      <InputText
+        v-model="array.test2"
+        schema="required"
+        :name="`array.${index}.test2`"
+        :label="`テスト${index}テスト2`"
+      />
+    </div>
     <!-- <form-item label="技能者">
       <InputCheckbox schema="required" name="job.unemployed" label="仕事終了" />
     </form-item> -->

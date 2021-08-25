@@ -1,7 +1,6 @@
 <template>
   <slot
     :value="value"
-    :setValue="setValue"
     :errors="errors"
     :fieldValues="fieldValues"
     :isValid="isValid"
@@ -35,19 +34,23 @@ export default defineComponent({
     }
   },
   setup(props, { slots }) {
-    const { inputItems, inputs, fieldValues } = useForm<any>();
-    const item = inputItems.value[props.name];
+    const { inputs, fieldValues, validators, inputKeys } = useForm<any>();
+    const item = inputKeys.includes(props.name);
+
     if (!item) {
-      const keys = Object.keys(inputItems.value);
+      const keys = inputKeys.join(", ");
       throw new Error(`${props.name} is invalid key. available keys: ${keys}`);
     }
 
-    const validator = item.useValidator(props.label, props.schema);
+    const validator = validators.createValidator(
+      props.name,
+      props.label,
+      props.schema
+    );
 
-    const setValue = (event: Event) => {
-      const targetValue = (event.target as HTMLInputElement).value;
-      item.setValue(targetValue);
-    };
+    const inputKey = computed(() => {
+      return props.name.split(".");
+    });
 
     const errors = computed(() => {
       return validator.errorMsg;
@@ -58,20 +61,31 @@ export default defineComponent({
     });
 
     const value = computed(() => {
-      return get(inputs, item.keyName);
+      return get(inputs, props.name);
     });
 
+    const isArrayValue = computed(() => {
+      return Array.isArray(fieldValues[inputKey.value[0]]);
+    });
+
+    //TODO: lodashのgetを使ったほうが良さそう
     watch(
-      () => get(fieldValues, item.keyName),
+      () =>
+        get(fieldValues, isArrayValue.value ? inputKey.value[0] : props.name),
       value => {
-        validator.validate(value);
+        if (Array.isArray(value)) {
+          const index = inputKey.value[1] as any;
+          const target = inputKey.value[2];
+          validator.validate(value[index][target]);
+        } else {
+          validator.validate(value);
+        }
       },
       { deep: true }
     );
 
     return {
       fieldValues,
-      setValue,
       value,
       errors,
       isValid

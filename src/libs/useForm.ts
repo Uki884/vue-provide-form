@@ -10,7 +10,7 @@ import {
 } from "vue";
 import set from "just-safe-set";
 import { Validators } from "@/libs/validators";
-import { isObject } from "@/utils";
+import { isObject, recursiveObjects } from "@/utils";
 
 export interface FormItems {
   [key: string]: {
@@ -35,32 +35,10 @@ export interface Form<T> {
   useSetValue: (key: string, payload: any) => void;
   validate: () => boolean;
   handleSubmit: (cb?: Function) => void;
+  validators: Validators;
   inputItems: Ref<any>;
+  inputKeys: string[];
 }
-
-const recursiveObjects = (objects: any, name: string): FormItems => {
-  const items = objects;
-  if (!isObject(items)) {
-    throw new Error("not object");
-  }
-  const result = {} as FormItems;
-  const recursive = (objects: any, name: string): any => {
-    if (!isObject(objects) || !objects) {
-      result[name] = {
-        keyName: name,
-        value: objects
-      };
-      return result;
-    } else if (isObject(objects)) {
-      for (const object in objects) {
-        recursive(objects[object], name + "." + object);
-      }
-      return result;
-    }
-  };
-
-  return recursive(items, name);
-};
 
 const createSetValue = (key: string, func: Function): SetValue => {
   const setValue = (payload: any) => {
@@ -69,32 +47,17 @@ const createSetValue = (key: string, func: Function): SetValue => {
   return setValue;
 };
 
-const createInputs = (inputs: any, func: Function, Validators: any) => {
-  const result = {} as FormItems;
-  for (const input of Object.keys(inputs)) {
-    if (Array.isArray(inputs[input])) {
-      throw new Error(`array is not supported. key: ${input}`);
-    }
-
-    if (isObject(inputs[input])) {
-      const items = recursiveObjects(inputs[input], input);
-      for (const item of Object.keys(items)) {
-        items[item].setValue = createSetValue(items[item].keyName, func);
-        items[item].useValidator = (name: string, schema: string) =>
-          Validators.createValidator(items[item].keyName, name, schema);
-        result[item] = items[item];
-      }
+const createInputKeys = (state: any) => {
+  let keys: string[] = [];
+  for (const inputKey of Object.keys(state)) {
+    if (isObject(state[inputKey])) {
+      const objectKeys = recursiveObjects<string[]>(state[inputKey], inputKey);
+      keys = [...objectKeys, ...keys];
     } else {
-      const item = {} as FormItem;
-      item.keyName = input;
-      // item.value = inputs[input];
-      item.useValidator = (name: string, schema: string) =>
-        Validators.createValidator(item.keyName, name, schema);
-      item.setValue = createSetValue(input, func);
-      result[input] = item;
+      keys.push(inputKey);
     }
   }
-  return { ...result };
+  return keys;
 };
 
 export const createForm = (options: { defaultValues: any }) => {
@@ -102,13 +65,7 @@ export const createForm = (options: { defaultValues: any }) => {
   const inputs = readonly(state);
   const validators = new Validators();
 
-  const setValue = (key: string, payload: any) => {
-    set(state, key, payload);
-  };
-
-  const inputItems = computed(() => {
-    return createInputs(state, setValue, validators);
-  });
+  const inputKeys = createInputKeys(state);
 
   const handleSubmit = (cb?: Function) => {
     const isValid = validators.validate(state)();
@@ -120,11 +77,10 @@ export const createForm = (options: { defaultValues: any }) => {
 
   return {
     inputs,
+    inputKeys,
     fieldValues: state,
-    useSetValue: setValue,
-    validate: validators.validate(state),
-    handleSubmit,
-    inputItems: inputItems
+    validators,
+    handleSubmit
   };
 };
 
