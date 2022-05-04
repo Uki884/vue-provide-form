@@ -17,6 +17,10 @@ export default defineComponent({
   },
   setup() {
     const state = {
+      array: [
+        { test: "aa", test2: "bb", test3: true },
+        { test: "cc", test2: "bb", test3: false }
+      ],
       name: "",
       nameKana: "",
       email: "",

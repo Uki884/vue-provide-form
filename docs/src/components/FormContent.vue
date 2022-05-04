@@ -44,6 +44,35 @@
         label="仕事開始月"
       />
     </FormItem>
+    <div v-for="(array, index) in fieldValues.array" :key="index">
+      フォーム1
+      <InputText
+        v-model="array.test"
+        schema="required"
+        :name="`array.${index}.test`"
+        :label="`テスト${index}テスト`"
+      />
+      フォーム2
+      <InputText
+        v-model="array.test2"
+        schema="required"
+        :name="`array.${index}.test2`"
+        :label="`テスト${index}テスト2`"
+      />
+      フォーム3
+      <InputProvider
+        schema=""
+        :name="`array.${index}.test3`"
+        label="チェックボックス"
+        v-slot="{ errors, isValid }"
+      >
+        <input v-model="array.test3" type="checkbox" />
+        <div>
+          <div>validationMessage: {{ errors }}</div>
+          <div>isValid: {{ isValid }}</div>
+        </div>
+      </InputProvider>
+    </div>
     <!-- <form-item label="技能者">
       <InputCheckbox schema="required" name="job.unemployed" label="仕事終了" />
     </form-item> -->
@@ -68,6 +97,11 @@ interface State {
     type: string;
     start: { year: null | string; month: null | string; day: null | string };
   };
+  array: {
+    test: string;
+    test2: string;
+    test3: boolean;
+  }[];
 }
 export default defineComponent({
   name: "FormContent",
