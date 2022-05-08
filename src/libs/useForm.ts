@@ -38,14 +38,8 @@ export interface Form<T> {
   validators: Validators;
   inputItems: Ref<any>;
   inputKeys: string[];
+  setValue: SetValue;
 }
-
-const createSetValue = (key: string, func: Function): SetValue => {
-  const setValue = (payload: any) => {
-    return func(key, payload);
-  };
-  return setValue;
-};
 
 const createInputKeys = (state: any) => {
   let keys: string[] = [];
@@ -67,6 +61,10 @@ export const createForm = (options: { defaultValues: any }) => {
 
   const inputKeys = createInputKeys(state);
 
+  const setValue = (key: string, payload: any) => {
+    set(state, key, payload);
+  };
+
   const handleSubmit = (cb?: Function) => {
     const isValid = validators.validate(state)();
     if (!isValid) {
@@ -80,7 +78,8 @@ export const createForm = (options: { defaultValues: any }) => {
     inputKeys,
     fieldValues: state,
     validators,
-    handleSubmit
+    handleSubmit,
+    setValue: setValue
   };
 };
 

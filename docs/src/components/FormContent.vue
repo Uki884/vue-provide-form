@@ -4,6 +4,16 @@
     <form-item>
       <button @click="directSetValue">stateの直接変更はできない</button>
     </form-item>
+    <form-item>
+      <button @click="setValue('email', 'test@gmail.com')">
+        setValueを使用してstate更新
+      </button>
+    </form-item>
+    <form-item>
+      <button @click="setValue('array.0.test', 'test@gmail.com')">
+        setValueを使用してstate更新(更新対象が配列の場合)
+      </button>
+    </form-item>
     <FormItem label="email">
       <InputText
         v-model="fieldValues.email"
@@ -111,15 +121,17 @@ export default defineComponent({
     InputText
   },
   setup() {
-    const { inputs, handleSubmit, fieldValues } = useForm<State>();
+    const { inputs, handleSubmit, fieldValues, setValue } = useForm<State>();
     const directSetValue = () => {
       inputs.name = "aaaa";
     };
+
     const submit = (data: State) => {
       console.log(data);
     };
     return {
       fieldValues,
+      setValue,
       directSetValue,
       submit,
       handleSubmit,
